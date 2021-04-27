@@ -78,17 +78,5 @@ namespace Services
             
             return device != null;
         }
-        
-        /*private async Task<bool> EmployeeExists(Guid employeeId)
-        {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(employeeId);
-            if (employee == null)
-            {
-                _logger.LogInformation("Employee with id {EmployeeId} doesn't exist in the db", employeeId);
-                return false;
-            }
-
-            return true;
-        }*/
     }
 }

@@ -1,3 +1,4 @@
+using InventoryManagement.ActionFilters;
 using InventoryManagement.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,8 +21,12 @@ namespace InventoryManagement
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            }).AddNewtonsoftJson();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "InventoryManagement", Version = "v1"});
@@ -36,6 +41,7 @@ namespace InventoryManagement
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            services.AddScoped<ValidationAsyncFilterAttribute>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

@@ -4,6 +4,7 @@ using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
+using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 
@@ -32,14 +33,9 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost]
+        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeForCreationDto employeeForCreation)
         {
-            if (employeeForCreation == null)
-                return BadRequest("EmployeeForCreationDto is null");
-            
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-            
             var employeeDto = await _employeeService.CreateAsync(employeeForCreation);
             return CreatedAtAction("GetEmployee", new {id = employeeDto.Id}, employeeDto);
         }
@@ -52,11 +48,9 @@ namespace InventoryManagement.Controllers
         }
          
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
         public async Task<IActionResult> UpdateEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdate)
         {
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-            
             var employee = await _employeeService.UpdateAsync(id, employeeForUpdate);
             return employee ? NoContent() : NotFound();
         }
@@ -70,11 +64,9 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("{id:guid}/devices/assign")]
+        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
         public async Task<IActionResult> AssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto projectAssignManipulationDto)
         {
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-            
             projectAssignManipulationDto.AssignType = AssetAssignType.Adding;
             var result = await _employeeService.AssignDeviceAsync(id, projectAssignManipulationDto.Id);
             
@@ -82,11 +74,9 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("{id:guid}/devices/unassign")]
+        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
         public async Task<IActionResult> UnAssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto projectAssignManipulationDto)
         {
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-            
             projectAssignManipulationDto.AssignType = AssetAssignType.Removing;
             var result = await _employeeService.UnAssignDeviceAsync(id, projectAssignManipulationDto.Id);
             

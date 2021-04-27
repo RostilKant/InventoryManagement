@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
+using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 
@@ -27,14 +28,9 @@ namespace InventoryManagement.Controllers
             Ok(await _deviceService.GetOneById(id));
         
         [HttpPost]
+        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
         public async Task<IActionResult> PostProject([FromBody] DeviceForCreationDto projectForCreation)
         {
-            if (projectForCreation == null)
-                return BadRequest("ProjectForCreationDto is null");
-            
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-            
             var projectDto = await _deviceService.CreateAsync(projectForCreation);
             return CreatedAtAction("GetDevices", new {id = projectDto.Id}, projectDto);
         }
@@ -47,11 +43,9 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] DeviceForUpdateDto projectForUpdate)
         {
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-            
             var project = await _deviceService.UpdateAsync(id, projectForUpdate);
             return project ? NoContent() : NotFound();
         }
