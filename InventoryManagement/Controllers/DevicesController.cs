@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
+using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
@@ -18,17 +21,22 @@ namespace InventoryManagement.Controllers
         {
             _deviceService = deviceService;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> GetDevices() =>
-            Ok(await _deviceService.GetManyAsync());
+        public async Task<IActionResult> GetDevices([FromQuery] DeviceParameters deviceParameters)
+        {
+            var (devices, metadata) = await _deviceService.GetManyAsync(deviceParameters);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            
+            return Ok(devices);
+        }
         
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetDevice(Guid id) =>
             Ok(await _deviceService.GetOneById(id));
         
         [HttpPost]
-        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostProject([FromBody] DeviceForCreationDto projectForCreation)
         {
             var projectDto = await _deviceService.CreateAsync(projectForCreation);
@@ -43,7 +51,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPut("{id:guid}")]
-        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] DeviceForUpdateDto projectForUpdate)
         {
             var project = await _deviceService.UpdateAsync(id, projectForUpdate);

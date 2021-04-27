@@ -6,16 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace InventoryManagement.ActionFilters
 {
-    public class ValidationAsyncFilterAttribute : IAsyncActionFilter
+    public class ValidationFilterAttribute : IActionFilter
     {
-        private readonly ILogger<ValidationAsyncFilterAttribute> _logger;
+        private readonly ILogger<ValidationFilterAttribute> _logger;
 
-        public ValidationAsyncFilterAttribute(ILogger<ValidationAsyncFilterAttribute> logger)
+        public ValidationFilterAttribute(ILogger<ValidationFilterAttribute> logger)
         {
             _logger = logger;
         }
-
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        
+        public void OnActionExecuting(ActionExecutingContext context)
         {
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
@@ -35,8 +35,10 @@ namespace InventoryManagement.ActionFilters
                 _logger.LogError($"Invalid model state for the object. Controller:{controller}, action: {action}");
                 context.Result = new UnprocessableEntityObjectResult(context.ModelState);
             }
+        }
 
-            var result = await next();
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
         }
     }
 }

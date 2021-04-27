@@ -8,6 +8,7 @@ using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.Extensions.Logging;
 using Repository.Contracts;
 using Services.Contracts;
@@ -28,10 +29,10 @@ namespace Services
         }
 
 
-        public async Task<IEnumerable<EmployeeDto>> GetManyAsync()
+        public async Task<(IEnumerable<EmployeeDto>, Metadata)> GetManyAsync(EmployeeParameters employeeParameters)
         {
-            var employees = await _repositoryManager.Employee.GetAllEmployees();
-            return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+            var employees = await _repositoryManager.Employee.GetAllEmployees(employeeParameters);
+            return (_mapper.Map<IEnumerable<EmployeeDto>>(employees), employees.Metadata);
         }
 
         public async Task<EmployeeDto> GetByIdAsync(Guid id)

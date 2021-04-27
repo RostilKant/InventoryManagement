@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.Models;
+using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Repository.Contracts;
 using Services.Contracts;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Services
 {
@@ -24,16 +28,16 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<DeviceDto>> GetManyAsync()
+        public async Task<(IEnumerable<DeviceDto>, Metadata)> GetManyAsync(DeviceParameters deviceParameters)
         {
-            var devices = await _repositoryManager.Device.GetAllDevicesAsync();
+            var devices = await _repositoryManager.Device.GetAllDevicesAsync(deviceParameters);
 
             if (devices == null)
             {
                 _logger.LogError("Devices wasn't found in db!");
             }
-
-            return _mapper.Map<IEnumerable<DeviceDto>>(devices);
+            
+            return (_mapper.Map<IEnumerable<DeviceDto>>(devices), devices?.Metadata);
         }
 
         public async Task<DeviceDto> GetOneById(Guid id)

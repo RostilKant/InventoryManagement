@@ -5,12 +5,13 @@ using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.Models;
+using Entities.RequestFeatures;
 
 namespace Services.Contracts
 {
     public interface IEmployeeService
     {
-        public Task<IEnumerable<EmployeeDto>> GetManyAsync();
+        public Task<(IEnumerable<EmployeeDto>, Metadata)> GetManyAsync(EmployeeParameters employeeParameters);
         public Task<EmployeeDto> GetByIdAsync(Guid id);
         public Task<EmployeeDto> CreateAsync(EmployeeForCreationDto employeeForCreation);
         public Task<bool> DeleteAsync(Guid id);

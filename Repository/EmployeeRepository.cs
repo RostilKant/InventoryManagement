@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Entities;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
 
@@ -16,11 +17,15 @@ namespace Repository
         {
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployees() =>
-            await FindAll()
+        public async Task<PagedList<Employee>> GetAllEmployees(EmployeeParameters employeeParameters)
+        {
+            var result = await FindAll()
                 .Include(x => x.Devices)
                 .OrderBy(x => x.EmploymentDate)
                 .ToListAsync();
+
+            return PagedList<Employee>.ToPagedList(result, employeeParameters.PageNumber, employeeParameters.PageSize);
+        }
 
         public async Task<Employee> GetEmployeeAsync(Guid id) =>
             await FindByCondition(x => x.Id == id)

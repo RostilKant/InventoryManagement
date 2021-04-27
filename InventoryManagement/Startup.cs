@@ -41,7 +41,7 @@ namespace InventoryManagement
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-            services.AddScoped<ValidationAsyncFilterAttribute>();
+            services.AddScoped<ValidationFilterAttribute>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

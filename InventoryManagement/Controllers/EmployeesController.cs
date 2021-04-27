@@ -4,8 +4,10 @@ using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
+using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
@@ -22,8 +24,12 @@ namespace InventoryManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployees() =>
-            Ok(await _employeeService.GetManyAsync());
+        public async Task<IActionResult> GetEmployees([FromQuery] EmployeeParameters employeeParameters)
+        {
+            var (devices, metadata) = await _employeeService.GetManyAsync(employeeParameters);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            return Ok(devices);
+        }
         
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetEmployee(Guid id)
@@ -33,7 +39,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost]
-        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeForCreationDto employeeForCreation)
         {
             var employeeDto = await _employeeService.CreateAsync(employeeForCreation);
@@ -48,7 +54,7 @@ namespace InventoryManagement.Controllers
         }
          
         [HttpPut("{id:guid}")]
-        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdate)
         {
             var employee = await _employeeService.UpdateAsync(id, employeeForUpdate);
@@ -64,7 +70,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("{id:guid}/devices/assign")]
-        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> AssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto projectAssignManipulationDto)
         {
             projectAssignManipulationDto.AssignType = AssetAssignType.Adding;
@@ -74,7 +80,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("{id:guid}/devices/unassign")]
-        [ServiceFilter(typeof(ValidationAsyncFilterAttribute))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UnAssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto projectAssignManipulationDto)
         {
             projectAssignManipulationDto.AssignType = AssetAssignType.Removing;
