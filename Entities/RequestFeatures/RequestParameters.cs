@@ -1,4 +1,6 @@
-﻿namespace Entities.RequestFeatures
+﻿using Entities.Enums;
+
+namespace Entities.RequestFeatures
 {
     public abstract class RequestParameters
     {
@@ -16,8 +18,25 @@
     }
 
     public class EmployeeParameters : RequestParameters
-    { }
-    
+    {
+        public EmployeeDepartment? Department { get; set; } = null;
+        public string Job { get; set; }
+        public string OfficeAddress { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
+    }
+
     public class DeviceParameters : RequestParameters
-    { }
+    {
+        public string Model { get; set; }
+
+        public DeviceCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
+        
+        public string Manufacturer { get; set; }
+        
+        public string OfficeAddress { get; set; }
+    }
 }

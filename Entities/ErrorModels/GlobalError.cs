@@ -2,10 +2,10 @@
 
 namespace Entities.ErrorModels
 {
-    public class GlobalError
+    public record GlobalError
     {
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
+        public int StatusCode { get; init; }
+        public string Message { get; init; }
 
         public override string ToString() => JsonSerializer.Serialize(this);
     }

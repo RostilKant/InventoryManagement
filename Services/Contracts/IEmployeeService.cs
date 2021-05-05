@@ -19,6 +19,5 @@ namespace Services.Contracts
 
         public Task<bool> AssignDeviceAsync(Guid id, Guid deviceId);
         public Task<bool> UnAssignDeviceAsync(Guid id, Guid deviceId);
-
     }
 }

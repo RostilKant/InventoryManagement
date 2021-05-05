@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Entities.Models
 {
     [Index(nameof(FirstName), nameof(LastName), IsUnique = true)]
-    public class Employee
+    public record Employee
     {
         [Column("EmployeeId")]
         public Guid Id { get; set; }

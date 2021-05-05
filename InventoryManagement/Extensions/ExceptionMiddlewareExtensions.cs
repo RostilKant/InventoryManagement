@@ -26,7 +26,6 @@ namespace InventoryManagement.Extensions
 
                         await context.Response.WriteAsync(new GlobalError
                         {
-                            Message = "Internal Server Error",
                             StatusCode = context.Response.StatusCode
                         }.ToString());
                     }

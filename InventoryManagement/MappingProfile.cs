@@ -24,7 +24,7 @@ namespace InventoryManagement
             CreateMap<EmployeeForCreationDto, Employee>();
             CreateMap<EmployeeForUpdateDto, Employee>();
 
-            CreateMap<Device, DeviceDto>();
+            CreateMap<Device, DeviceDto>(); 
             CreateMap<DeviceForCreationDto, Device>();
             CreateMap<DeviceForUpdateDto, Device>();
         }

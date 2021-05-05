@@ -6,7 +6,7 @@ using Entities.Enums;
 
 namespace Entities.Models
 {
-    public class Device
+    public record Device
     {
         [Column("DeviceId")]
         public Guid Id { get; set; }

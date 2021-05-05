@@ -71,20 +71,20 @@ namespace InventoryManagement.Controllers
         
         [HttpPost("{id:guid}/devices/assign")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> AssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto projectAssignManipulationDto)
+        public async Task<IActionResult> AssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto deviceForAssignDto)
         {
-            projectAssignManipulationDto.AssignType = AssetAssignType.Adding;
-            var result = await _employeeService.AssignDeviceAsync(id, projectAssignManipulationDto.Id);
+            deviceForAssignDto.AssignType = AssetAssignType.Adding;
+            var result = await _employeeService.AssignDeviceAsync(id, deviceForAssignDto.Id);
             
             return result ? NoContent() : NotFound();
         }
         
         [HttpPost("{id:guid}/devices/unassign")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UnAssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto projectAssignManipulationDto)
+        public async Task<IActionResult> UnAssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto deviceForAssignDto)
         {
-            projectAssignManipulationDto.AssignType = AssetAssignType.Removing;
-            var result = await _employeeService.UnAssignDeviceAsync(id, projectAssignManipulationDto.Id);
+            deviceForAssignDto.AssignType = AssetAssignType.Removing;
+            var result = await _employeeService.UnAssignDeviceAsync(id, deviceForAssignDto.Id);
             
             return result ? NoContent() : NotFound();
         }
