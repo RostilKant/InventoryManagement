@@ -25,6 +25,7 @@ namespace Repository
 
             var result = await FindAll()
                 .FilterBy(employeeParameters.GetFilters(), employeeParameters)
+                .Search(employeeParameters.SearchTerm)
                 .Include(x => x.Devices)
                 .OrderBy(x => x.EmploymentDate)
                 .ToListAsync();

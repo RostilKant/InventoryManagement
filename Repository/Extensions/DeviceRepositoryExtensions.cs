@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
 
@@ -24,6 +26,32 @@ namespace Repository.Extensions
             }
 
             return queryable;
+        }
+
+        public static IQueryable<Device> Search(this IQueryable<Device> queryable, string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return queryable;
+            }
+
+            var lowerTerm = searchTerm.ToLower();
+            Guid.TryParse(searchTerm, out var id);
+            Enum.TryParse<DeviceCategory>(searchTerm, out var category);
+            Enum.TryParse<AssetStatus>(searchTerm, out var status);
+            
+            return queryable.Where(x => 
+                x.Imei.ToLower().Contains(lowerTerm) ||
+                x.Category.Equals(category) ||
+                x.OfficeAddress.ToLower().Contains(lowerTerm) ||
+                x.Manufacturer.ToLower().Contains(lowerTerm) ||
+                x.Model.ToLower().Contains(lowerTerm) ||
+                x.Notes.ToLower().Contains(lowerTerm) ||
+                x.Serial.ToLower().Contains(lowerTerm) ||
+                x.Status.Equals(status) ||
+                x.MacAddress.ToLower().Contains(lowerTerm) ||
+                x.Id.Equals(id)
+            );
         }
     }
 }

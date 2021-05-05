@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
 
@@ -26,6 +28,33 @@ namespace Repository.Extensions
             }
 
             return queryable;
+        }
+        
+        public static IQueryable<Employee> Search(this IQueryable<Employee> queryable, string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return queryable;
+            }
+
+            var lowerTerm = searchTerm.ToLower();
+            Guid.TryParse(searchTerm, out var id);
+            Enum.TryParse<EmployeeDepartment>(searchTerm, out var department);
+            
+            return queryable.Where(x => 
+                x.Address.ToLower().Contains(lowerTerm) ||
+                x.City.ToLower().Contains(lowerTerm) ||
+                x.OfficeAddress.ToLower().Contains(lowerTerm) ||
+                x.Country.ToLower().Contains(lowerTerm) ||
+                x.State.ToLower().Contains(lowerTerm) ||
+                x.ZipCode.ToLower().Contains(lowerTerm) ||
+                x.Department.Equals(department) ||
+                x.Job.ToLower().Contains(lowerTerm) ||
+                x.Phone.ToLower().Contains(lowerTerm) ||
+                x.FirstName.ToLower().Contains(lowerTerm) ||
+                x.LastName.ToLower().Contains(lowerTerm) ||
+                x.Id.Equals(id)
+                );
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Repository
         {
             var result = await FindAll()
                 .FilterBy(deviceParameters.GetFilters(), deviceParameters)
+                .Search(deviceParameters.SearchTerm)
                 .Include(x => x.Employee)
                 .ToListAsync();
 
