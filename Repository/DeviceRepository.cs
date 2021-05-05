@@ -8,6 +8,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -20,34 +21,8 @@ namespace Repository
 
         public async Task<PagedList<Device>> GetAllDevicesAsync(DeviceParameters deviceParameters)
         {
-            var queryable = FindAll();
-            
-            var filters = GetFilters(deviceParameters);
-
-            foreach (var filter in filters)
-            {
-                switch (filter)
-                {
-                    case "Model":
-                        queryable = queryable.Where(x => x.Model.Equals(deviceParameters.Model));
-                        break;
-                    case "Category":
-                        queryable = queryable.Where(x => x.Category.Equals(deviceParameters.Category));
-                        break;
-                    case "Status":
-                        queryable = queryable.Where(x => x.Status.Equals(deviceParameters.Status));
-                        break;
-                    case "Manufacturer":
-                        queryable = queryable.Where(x => x.Manufacturer.Equals(deviceParameters.Manufacturer));
-                        break;
-                    case "OfficeAddress":
-                        queryable = queryable.Where(x => x.OfficeAddress.Equals(deviceParameters.OfficeAddress));
-                        break;
-                }
-                
-            }
-            
-            var result = await queryable
+            var result = await FindAll()
+                .FilterBy(deviceParameters.GetFilters(), deviceParameters)
                 .Include(x => x.Employee)
                 .ToListAsync();
 
