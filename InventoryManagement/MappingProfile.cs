@@ -24,7 +24,13 @@ namespace InventoryManagement
             CreateMap<EmployeeForCreationDto, Employee>();
             CreateMap<EmployeeForUpdateDto, Employee>();
 
-            CreateMap<Device, DeviceDto>(); 
+            CreateMap<Device, DeviceDto>()
+                .ForMember(d => d.Category, 
+                    memberOptions => 
+                        memberOptions.MapFrom(x => Enum.GetName(x.Category)))
+                .ForMember(d => d.Status, 
+                    memberOptions => 
+                        memberOptions.MapFrom(x => Enum.GetName(x.Status))); 
             CreateMap<DeviceForCreationDto, Device>();
             CreateMap<DeviceForUpdateDto, Device>();
         }

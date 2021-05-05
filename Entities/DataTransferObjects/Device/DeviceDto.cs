@@ -16,12 +16,12 @@ namespace Entities.DataTransferObjects.Device
         [Required(ErrorMessage = "Serial is required field")]
         [MaxLength(40, ErrorMessage = "Maximum length of Serial is 40 characters")]
         public string Serial { get; set; }
-        
+
         [Required(ErrorMessage = "Category is required field")]
-        public DeviceCategory Category { get; set; }
+        public string Category { get; set; }
 
         [Required(ErrorMessage = "Status is required field")]
-        public AssetStatus Status { get; set; }
+        public string Status { get; set; }
         
         [Required(ErrorMessage = "Manufacturer is required field")]
         public string Manufacturer { get; set; }
