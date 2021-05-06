@@ -40,8 +40,8 @@ namespace Repository.Extensions
             Guid.TryParse(searchTerm, out var id);
             Enum.TryParse<DeviceCategory>(searchTerm, out var category);
             Enum.TryParse<AssetStatus>(searchTerm, out var status);
-            
-            return queryable.Where(x => 
+
+            return queryable.Where(x =>
                 x.Imei.ToLower().Contains(lowerTerm) ||
                 x.Category.Equals(category) ||
                 x.OfficeAddress.ToLower().Contains(lowerTerm) ||
@@ -64,7 +64,7 @@ namespace Repository.Extensions
             var propertyInfos = typeof(Device).GetProperties();
 
             var orderQuery = "";
-            
+
             foreach (var param in orderQueryParams)
             {
                 if (string.IsNullOrWhiteSpace(param))
@@ -82,9 +82,10 @@ namespace Repository.Extensions
             }
 
             orderQuery = orderQuery.TrimEnd(',', ' ');
-            
-            return string.IsNullOrWhiteSpace(orderQuery) ? 
-                queryable.OrderBy(d => d.PurchaseDate) : queryable.OrderBy(orderByQueryString);
+
+            return string.IsNullOrWhiteSpace(orderQuery)
+                ? queryable.OrderBy(d => d.PurchaseDate)
+                : queryable.OrderBy(orderByQueryString);
         }
     }
 }

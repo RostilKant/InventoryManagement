@@ -50,4 +50,72 @@ namespace Entities.RequestFeatures
         
         public string OfficeAddress { get; set; }
     }
+    
+    public class AccessoryParameters : RequestParameters
+    {
+        public AccessoryParameters()
+        {
+            OrderBy = "purchaseDate";
+        }
+        public string Model { get; set; }
+
+        public DeviceCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
+        
+        public string Manufacturer { get; set; }
+        
+        public string OfficeAddress { get; set; }
+    }
+    
+    public class ConsumableParameters : RequestParameters
+    {
+        public ConsumableParameters()
+        {
+            OrderBy = "purchaseDate";
+        }
+        public string Model { get; set; }
+
+        public DeviceCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
+        
+        public string Manufacturer { get; set; }
+        
+        public string OfficeAddress { get; set; }
+    }
+    
+    public class ComponentParameters : RequestParameters
+    {
+        public ComponentParameters()
+        {
+            OrderBy = "purchaseDate";
+        }
+        public string Model { get; set; }
+
+        public DeviceCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
+        
+        public string Manufacturer { get; set; }
+        
+        public string OfficeAddress { get; set; }
+    }
+    
+    public class LicenseParameters : RequestParameters
+    {
+        public LicenseParameters()
+        {
+            OrderBy = "purchaseDate";
+        }
+        public string Model { get; set; }
+
+        public DeviceCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
+        
+        public string Manufacturer { get; set; }
+        
+        public string OfficeAddress { get; set; }
+    }
 }
