@@ -8,4 +8,8 @@
       <ProjectReference Include="..\Entities\Entities.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.9" />
+    </ItemGroup>
+
 </Project>

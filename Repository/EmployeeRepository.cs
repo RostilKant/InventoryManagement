@@ -26,8 +26,8 @@ namespace Repository
             var result = await FindAll()
                 .FilterBy(employeeParameters.GetFilters(), employeeParameters)
                 .Search(employeeParameters.SearchTerm)
+                .Sort(employeeParameters.OrderBy)
                 .Include(x => x.Devices)
-                .OrderBy(x => x.EmploymentDate)
                 .ToListAsync();
             
             return PagedList<Employee>.ToPagedList(result, employeeParameters.PageNumber, employeeParameters.PageSize);

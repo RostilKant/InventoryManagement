@@ -5,6 +5,7 @@ using System.Reflection;
 using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
+using System.Linq.Dynamic.Core;
 
 namespace Repository.Extensions
 {
@@ -33,9 +34,7 @@ namespace Repository.Extensions
         public static IQueryable<Employee> Search(this IQueryable<Employee> queryable, string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
-            {
                 return queryable;
-            }
 
             var lowerTerm = searchTerm.ToLower();
             Guid.TryParse(searchTerm, out var id);
@@ -55,6 +54,41 @@ namespace Repository.Extensions
                 x.LastName.ToLower().Contains(lowerTerm) ||
                 x.Id.Equals(id)
                 );
+        }
+
+        public static IQueryable<Employee> Sort(this IQueryable<Employee> queryable, string orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+                return queryable.OrderBy(e => e.EmploymentDate);
+
+            var orderParams = orderByQueryString.Trim().Split(',');
+
+            var propertyInfos = typeof(Employee).GetProperties(BindingFlags.Public
+                                                               | BindingFlags.Instance);
+
+            var orderquery = "";
+
+            foreach (var param in orderParams)
+            {
+                if (string.IsNullOrWhiteSpace(param))
+                    continue;
+
+                var propertyName = param.Split(' ')[0];
+                var objProperty = propertyInfos.FirstOrDefault(p =>
+                    p.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (objProperty == null)
+                    continue;
+
+                var sortOrder = param.EndsWith(" desc") ? "descending" : "ascending";
+
+                orderquery += $"{objProperty.Name} {sortOrder},";
+            }
+
+            orderquery = orderquery.TrimEnd(',', ' ');
+
+            return string.IsNullOrWhiteSpace(orderquery) ? 
+                queryable.OrderBy(e => e.EmploymentDate) : queryable.OrderBy(orderquery);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
@@ -52,6 +53,38 @@ namespace Repository.Extensions
                 x.MacAddress.ToLower().Contains(lowerTerm) ||
                 x.Id.Equals(id)
             );
+        }
+
+        public static IQueryable<Device> Sort(this IQueryable<Device> queryable, string orderByQueryString)
+        {
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+                return queryable.OrderBy(d => d.PurchaseDate);
+
+            var orderQueryParams = orderByQueryString.Trim().Split(',');
+            var propertyInfos = typeof(Device).GetProperties();
+
+            var orderQuery = "";
+            
+            foreach (var param in orderQueryParams)
+            {
+                if (string.IsNullOrWhiteSpace(param))
+                    continue;
+
+                var paramProperty = param.Split(' ')[0];
+                var objProperty = propertyInfos.FirstOrDefault(x =>
+                    x.Name.Equals(paramProperty, StringComparison.InvariantCultureIgnoreCase));
+
+                if (objProperty == null)
+                    continue;
+
+                var sortOrder = param.EndsWith(" desc") ? "descending" : "ascending";
+                orderQuery += $"{objProperty.Name} {sortOrder},";
+            }
+
+            orderQuery = orderQuery.TrimEnd(',', ' ');
+            
+            return string.IsNullOrWhiteSpace(orderQuery) ? 
+                queryable.OrderBy(d => d.PurchaseDate) : queryable.OrderBy(orderByQueryString);
         }
     }
 }

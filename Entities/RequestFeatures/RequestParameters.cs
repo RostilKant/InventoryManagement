@@ -17,10 +17,15 @@ namespace Entities.RequestFeatures
         }
         
         public string SearchTerm { get; set; }
+        public string OrderBy { get; set; }
     }
 
     public class EmployeeParameters : RequestParameters
     {
+        public EmployeeParameters()
+        {
+            OrderBy = "employmentDate";
+        }
         public EmployeeDepartment? Department { get; set; } = null;
         public string Job { get; set; }
         public string OfficeAddress { get; set; }
@@ -31,6 +36,10 @@ namespace Entities.RequestFeatures
 
     public class DeviceParameters : RequestParameters
     {
+        public DeviceParameters()
+        {
+            OrderBy = "purchaseDate";
+        }
         public string Model { get; set; }
 
         public DeviceCategory? Category { get; set; } = null;
