@@ -6,6 +6,10 @@ namespace Repository.Contracts
     {
         IEmployeeRepository Employee { get; }
         IDeviceRepository Device { get; }
+        IAccessoryRepository Accessory { get; }
+        IComponentRepository Component { get; }
+        IConsumableRepository Consumable { get; }
+        ILicenseRepository License { get; }
         
         Task SaveAsync();
     }

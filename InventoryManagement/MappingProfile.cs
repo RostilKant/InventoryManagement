@@ -6,6 +6,7 @@ using Entities.DataTransferObjects.Component;
 using Entities.DataTransferObjects.Consumable;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
+using Entities.DataTransferObjects.License;
 using Entities.Enums;
 using Entities.Models;
 using Microsoft.OpenApi.Extensions;
@@ -49,9 +50,9 @@ namespace InventoryManagement
             CreateMap<ConsumableForCreationDto, Consumable>();
             CreateMap<ConsumableForUpdateDto, Consumable>();
             
-            CreateMap<Consumable, ConsumableDto>();
-            CreateMap<ConsumableForCreationDto, Consumable>();
-            CreateMap<ConsumableForUpdateDto, Consumable>();
+            CreateMap<License, LicenseDto>();
+            CreateMap<LicenseForCreationDto, License>();
+            CreateMap<LicenseForUpdateDto, License>();
         }
     }
 }

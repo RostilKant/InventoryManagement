@@ -38,6 +38,10 @@ namespace Services
         public async Task<EmployeeDto> GetByIdAsync(Guid id)
         {
             var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
+            
+            if (employee == null)
+                _logger.LogInformation("There is no employee with {Id}", id);
+
             return _mapper.Map<EmployeeDto>(employee);
         }
 
@@ -55,21 +59,34 @@ namespace Services
         {
             var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
             
+            if (employee == null)
+            {
+                _logger.LogWarning("There is no employee with {Id}", id);
+                return false;
+            }
+            
             _repositoryManager.Employee.DeleteEmployee(employee);
             await _repositoryManager.SaveAsync();
             
-            return employee != null;
+            return true;
         }
 
         public async Task<bool> UpdateAsync(Guid id, EmployeeForUpdateDto employeeForUpdate)
         {
             var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
+            
+            if (employee == null)
+            {
+                _logger.LogWarning("There is no employee with {Id}", id);
+                return false;
+            }
+            
             _mapper.Map(employeeForUpdate, employee);
             
             _repositoryManager.Employee.UpdateEmployee(employee);
             await _repositoryManager.SaveAsync();
             
-            return employee != null;
+            return true;
         }
         
         public async Task<bool> AssignDeviceAsync(Guid id, Guid deviceId)
@@ -84,7 +101,7 @@ namespace Services
 
             if (employee.Devices.Select(x => x.Id).Contains(device.Id))
             {
-                _logger.LogWarning($"Project with id {device.Id} is already exists");
+                _logger.LogWarning("Project with id {Id} is already exists", id);
                 return false;
             }
             
@@ -106,7 +123,7 @@ namespace Services
 
             if (!employee.Devices.Select(x => x.Id).Contains(device.Id))
             {
-                _logger.LogWarning($"Project with id {device.Id} doesn't exist");
+                _logger.LogWarning("Project with id {Id} doesn't exist", id);
                 return false;
             }
 

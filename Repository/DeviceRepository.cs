@@ -48,8 +48,8 @@ namespace Repository
         private List<string> GetFilters(DeviceParameters deviceParameters)
         {
             var result = typeof(DeviceParameters)
-                .GetProperties(BindingFlags.Public 
-                               | BindingFlags.Instance 
+                .GetProperties(BindingFlags.Public
+                               | BindingFlags.Instance
                                | BindingFlags.DeclaredOnly)
                 .ToList();
 

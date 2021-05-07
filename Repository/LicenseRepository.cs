@@ -15,7 +15,7 @@ namespace Repository
         {
         }
 
-        public async Task<PagedList<License>> GetAllComponentsAsync(LicenseParameters licenseParameters)
+        public async Task<PagedList<License>> GetAllLicensesAsync(LicenseParameters licenseParameters)
         {
             var result = await FindAll()
                 .ToListAsync();
@@ -23,7 +23,7 @@ namespace Repository
             return PagedList<License>.ToPagedList(result, licenseParameters.PageNumber, licenseParameters.PageSize);
         }
 
-        public async Task<License> GetComponentAsync(Guid id) =>
+        public async Task<License> GetLicenseAsync(Guid id) =>
             await FindByCondition(x => x.Id.Equals(id))
                 .SingleOrDefaultAsync();
 
