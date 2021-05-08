@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 
 namespace InventoryManagement
 {
@@ -25,7 +26,11 @@ namespace InventoryManagement
             {
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
-            }).AddNewtonsoftJson();
+            }).AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
+            services.AddSwaggerGenNewtonsoftSupport();
             
             services.AddSwaggerGen(c =>
             {

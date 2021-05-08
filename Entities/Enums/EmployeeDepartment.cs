@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Entities.Enums
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum EmployeeDepartment
     {
         Software_Development = 0,

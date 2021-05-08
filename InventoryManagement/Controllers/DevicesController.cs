@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;

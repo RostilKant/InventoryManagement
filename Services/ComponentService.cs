@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities.DataTransferObjects.Component;
-using Entities.DataTransferObjects.Consumable;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.Extensions.Logging;

@@ -1,15 +1,11 @@
-﻿using System;
-using AutoMapper;
-using Entities.DataTransferObjects;
+﻿using AutoMapper;
 using Entities.DataTransferObjects.Accessory;
 using Entities.DataTransferObjects.Component;
 using Entities.DataTransferObjects.Consumable;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.DataTransferObjects.License;
-using Entities.Enums;
 using Entities.Models;
-using Microsoft.OpenApi.Extensions;
 
 namespace InventoryManagement
 {
@@ -28,13 +24,7 @@ namespace InventoryManagement
             CreateMap<EmployeeForCreationDto, Employee>();
             CreateMap<EmployeeForUpdateDto, Employee>();
 
-            CreateMap<Device, DeviceDto>()
-                .ForMember(d => d.Category, 
-                    memberOptions => 
-                        memberOptions.MapFrom(x => Enum.GetName(x.Category)))
-                .ForMember(d => d.Status, 
-                    memberOptions => 
-                        memberOptions.MapFrom(x => Enum.GetName(x.Status))); 
+            CreateMap<Device, DeviceDto>();
             CreateMap<DeviceForCreationDto, Device>();
             CreateMap<DeviceForUpdateDto, Device>();
 

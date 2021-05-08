@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Entities.Enums;
 
 namespace Entities.DataTransferObjects.Device
 {

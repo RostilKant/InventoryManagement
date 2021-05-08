@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities.DataTransferObjects.Device;
-using Entities.Enums;
 
 namespace Entities.DataTransferObjects.Employee
 {

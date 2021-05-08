@@ -82,7 +82,7 @@ namespace Services
 
             _mapper.Map(accessoryForUpdate, accessory);
             
-            _repositoryManager.Accessory.CreateAccessory(accessory);
+            _repositoryManager.Accessory.UpdateAccessory(accessory);
             await _repositoryManager.SaveAsync();
 
             return true;

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Entities.DataTransferObjects;
-using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
-using Entities.Models;
 using Entities.RequestFeatures;
 
 namespace Services.Contracts

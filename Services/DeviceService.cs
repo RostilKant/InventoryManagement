@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities.DataTransferObjects.Device;
 using Entities.Models;
 using Entities.RequestFeatures;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Repository.Contracts;
 using Services.Contracts;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace Services
 {

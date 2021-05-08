@@ -34,6 +34,10 @@ namespace InventoryManagement.Extensions
         {
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped<IAccessoryService, AccessoryService>();
+            services.AddScoped<IComponentService, ComponentService>();
+            services.AddScoped<IConsumableService, ConsumableService>();
+            services.AddScoped<ILicenseService, LicenseService>();
         }
     }
 }

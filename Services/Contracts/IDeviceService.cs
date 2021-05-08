@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
-using Entities.Models;
 using Entities.RequestFeatures;
-using Microsoft.AspNetCore.Http;
-using Repository.Contracts;
 
 namespace Services.Contracts
 {

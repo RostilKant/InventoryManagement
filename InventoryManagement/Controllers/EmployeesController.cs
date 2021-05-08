@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Net.Mime;
 using System.Threading.Tasks;
-using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
@@ -13,6 +13,8 @@ using Services.Contracts;
 namespace InventoryManagement.Controllers
 {
     [Route("api/employees")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -26,9 +28,10 @@ namespace InventoryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEmployees([FromQuery] EmployeeParameters employeeParameters)
         {
-            var (devices, metadata) = await _employeeService.GetManyAsync(employeeParameters);
+            var (employees, metadata) = await _employeeService.GetManyAsync(employeeParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-            return Ok(devices);
+            
+            return Ok(employees);
         }
         
         [HttpGet("{id:guid}")]
@@ -54,8 +57,9 @@ namespace InventoryManagement.Controllers
         }
          
         [HttpPut("{id:guid}")]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UpdateEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdate)
+        public async Task<IActionResult> PutEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdate)
         {
             var employee = await _employeeService.UpdateAsync(id, employeeForUpdate);
             return employee ? NoContent() : NotFound();
@@ -70,6 +74,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("{id:guid}/devices/assign")]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> AssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto deviceForAssignDto)
         {
@@ -80,6 +85,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("{id:guid}/devices/unassign")]
+        [Consumes(MediaTypeNames.Application.Json)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UnAssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto deviceForAssignDto)
         {
