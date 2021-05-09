@@ -5,10 +5,10 @@ namespace Entities.Enums
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum EmployeeDepartment
     {
-        Software_Development = 0,
-        QA = 1,
-        Marketing = 2,
-        Hardware_Development = 3,
-        Client_Services = 4,
+        Software_Development = 1,
+        QA = 2,
+        Marketing = 3,
+        Hardware_Development = 4,
+        Client_Services = 5,
     }
 }

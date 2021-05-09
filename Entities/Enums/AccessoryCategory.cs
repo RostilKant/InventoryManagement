@@ -2,10 +2,10 @@
 {
     public enum AccessoryCategory
     {
-        Monitors,
-        Mousses,
-        Keyboards,
-        Webcams,
-        Routers
+        Monitors = 1,
+        Mousses = 2,
+        Keyboards = 3,
+        Webcams = 4,
+        Routers = 5
     }
 }

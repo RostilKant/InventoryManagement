@@ -11,9 +11,11 @@ namespace Repository.Extensions
 {
     public static class EmployeeRepositoryExtensions
     {
-        public static IQueryable<Employee> FilterBy(this IQueryable<Employee> queryable, IEnumerable<string> filters,
+        public static IQueryable<Employee> FilterBy(this IQueryable<Employee> queryable,
             EmployeeParameters employeeParameters)
         {
+            var filters = employeeParameters.GetFilters();
+                
             foreach (var filter in filters)
             {
                 queryable = filter switch

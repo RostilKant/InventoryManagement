@@ -7,21 +7,21 @@ using Entities.RequestFeatures;
 
 namespace Repository.Extensions
 {
-    public static class DeviceRepositoryExtensions
+    public static class LicenseRepositoryExtensions
     {
-        public static IQueryable<Device> FilterBy(this IQueryable<Device> queryable, DeviceParameters deviceParameters)
+        public static IQueryable<License> FilterBy(this IQueryable<License> queryable,
+            LicenseParameters licenseParameters)
         {
-            var filters = deviceParameters.GetFilters();
-            
+            var filters = licenseParameters.GetFilters();
+
             foreach (var filter in filters)
             {
                 queryable = filter switch
                 {
-                    "Model" => queryable.Where(x => x.Model.Equals(deviceParameters.Model)),
-                    "Category" => queryable.Where(x => x.Category.Equals(deviceParameters.Category)),
-                    "Status" => queryable.Where(x => x.Status.Equals(deviceParameters.Status)),
-                    "Manufacturer" => queryable.Where(x => x.Manufacturer.Equals(deviceParameters.Manufacturer)),
-                    "OfficeAddress" => queryable.Where(x => x.OfficeAddress.Equals(deviceParameters.OfficeAddress)),
+                    "Name" => queryable.Where(x => x.Name.Equals(licenseParameters.Name)),
+                    "Category" => queryable.Where(x => x.Category.Equals(licenseParameters.Category)),
+                    "IsReAssignable" => queryable.Where(x => x.IsReAssignable.Equals(licenseParameters.IsReAssignable)),
+                    "Manufacturer" => queryable.Where(x => x.Manufacturer.Equals(licenseParameters.Manufacturer)),
                     _ => queryable
                 };
             }
@@ -29,39 +29,30 @@ namespace Repository.Extensions
             return queryable;
         }
 
-        public static IQueryable<Device> Search(this IQueryable<Device> queryable, string searchTerm)
+        public static IQueryable<License> Search(this IQueryable<License> queryable, string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
-            {
                 return queryable;
-            }
 
             var lowerTerm = searchTerm.ToLower();
             Guid.TryParse(searchTerm, out var id);
-            Enum.TryParse<DeviceCategory>(searchTerm, out var category);
-            Enum.TryParse<AssetStatus>(searchTerm, out var status);
+            Enum.TryParse<LicenseCategory>(searchTerm, out var category);
 
             return queryable.Where(x =>
-                x.Imei.ToLower().Contains(lowerTerm) ||
+                x.Id.Equals(id) ||
                 x.Category.Equals(category) ||
-                x.OfficeAddress.ToLower().Contains(lowerTerm) ||
                 x.Manufacturer.ToLower().Contains(lowerTerm) ||
-                x.Model.ToLower().Contains(lowerTerm) ||
-                x.Notes.ToLower().Contains(lowerTerm) ||
-                x.Serial.ToLower().Contains(lowerTerm) ||
-                x.Status.Equals(status) ||
-                x.MacAddress.ToLower().Contains(lowerTerm) ||
-                x.Id.Equals(id)
-            );
+                x.Name.ToLower().Contains(lowerTerm) ||
+                x.ProductKey.ToLower().Contains(lowerTerm));
         }
 
-        public static IQueryable<Device> Sort(this IQueryable<Device> queryable, string orderByQueryString)
+        public static IQueryable<License> Sort(this IQueryable<License> queryable, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
                 return queryable.OrderBy(d => d.PurchaseDate);
 
             var orderQueryParams = orderByQueryString.Trim().Split(',');
-            var propertyInfos = typeof(Device).GetProperties();
+            var propertyInfos = typeof(License).GetProperties();
 
             var orderQuery = "";
 

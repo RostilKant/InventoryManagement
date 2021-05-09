@@ -5,6 +5,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -18,6 +19,9 @@ namespace Repository
         public async Task<PagedList<License>> GetAllLicensesAsync(LicenseParameters licenseParameters)
         {
             var result = await FindAll()
+                .FilterBy(licenseParameters)
+                .Search(licenseParameters.SearchTerm)
+                .Sort(licenseParameters.OrderBy)
                 .Include(x => x.Employees)
                 .ToListAsync();
             
