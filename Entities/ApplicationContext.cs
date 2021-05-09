@@ -75,6 +75,10 @@ namespace Entities
             modelBuilder.Entity<Consumable>()
                 .Property(c => c.Status)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Consumable>()
+                .Property(c => c.Category)
+                .HasConversion<string>();
             
             modelBuilder.Entity<Accessory>()
                 .Property(a => a.Category)

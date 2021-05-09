@@ -1,14 +1,18 @@
 using System;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DataTransferObjects.Accessory;
 using Entities.RequestFeatures;
+using InventoryManagement.ActionFilters;
 using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
     [Route("api/accessories")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
     public class AccessoriesController : ControllerBase
     {
@@ -37,6 +41,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PutAccessory(Guid id, AccessoryForUpdateDto accessoryForUpdate)
         {
             var accessory = await _accessoryService.UpdateAsync(id, accessoryForUpdate);
@@ -45,6 +50,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostAccessory(AccessoryForCreationDto accessoryForCreation)
         {
             var accessory = await _accessoryService.CreateAsync(accessoryForCreation);

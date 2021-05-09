@@ -72,7 +72,7 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, LicenseForUpdateDto licenseForUpdate)
         {
-            var license = await _repositoryManager.License.GetLicenseAsync(id);
+            var license = await _repositoryManager.License.GetLicenseAsync(id, true);
 
             if (license == null)
             {

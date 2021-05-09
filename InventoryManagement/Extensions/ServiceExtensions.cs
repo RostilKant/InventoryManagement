@@ -24,7 +24,7 @@ namespace InventoryManagement.Extensions
         public static void ConfigureSqlContext(this IServiceCollection services, 
             IConfiguration configuration) =>
             services.AddDbContext<ApplicationContext>(options => 
-                options.UseNpgsql(configuration.GetConnectionString("SQLConnection"), 
+                options.UseNpgsql(configuration.GetConnectionString("SQLConnection"),
                     builder => builder.MigrationsAssembly("InventoryManagement")));
 
         public static void ConfigureRepositoryManager(this IServiceCollection services)

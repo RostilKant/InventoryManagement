@@ -10,6 +10,13 @@ namespace Entities.Models
         [Column("ConsumableId")]
         public Guid Id { get; set; }
         
+        [Required(ErrorMessage = "Consumable name is required field")]
+        [MaxLength(100, ErrorMessage = "Maximum length of name is 100 characters")]
+        public string Name { get; set; }
+        
+        [Required(ErrorMessage = "Category is required field")]
+        public ConsumableCategory Category { get; set; }
+        
         [Required(ErrorMessage = "Status is required field")]
         public AssetStatus Status { get; set; }
         

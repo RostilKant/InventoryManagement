@@ -74,7 +74,7 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, ConsumableForUpdateDto consumableForUpdate)
         {
-            var consumable = await _repositoryManager.Consumable.GetConsumableAsync(id);
+            var consumable = await _repositoryManager.Consumable.GetConsumableAsync(id, true);
 
             if (consumable == null)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
@@ -30,17 +31,17 @@ namespace InventoryManagement.Controllers
         {
             var (employees, metadata) = await _employeeService.GetManyAsync(employeeParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-            
+
             return Ok(employees);
         }
-        
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetEmployee(Guid id)
         {
             var employee = await _employeeService.GetByIdAsync(id);
             return employee == null ? NotFound() : Ok(employee);
         }
-        
+
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeForCreationDto employeeForCreation)
@@ -48,16 +49,15 @@ namespace InventoryManagement.Controllers
             var employeeDto = await _employeeService.CreateAsync(employeeForCreation);
             return CreatedAtAction("GetEmployee", new {id = employeeDto.Id}, employeeDto);
         }
-        
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteEmployee(Guid id)
         {
             var employee = await _employeeService.DeleteAsync(id);
             return employee ? NoContent() : NotFound();
         }
-         
+
         [HttpPut("{id:guid}")]
-        [Consumes(MediaTypeNames.Application.Json)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PutEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdate)
         {
@@ -72,28 +72,15 @@ namespace InventoryManagement.Controllers
             var employee = await _employeeService.GetByIdAsync(id);
             return Ok(employee.Devices);
         }
-        
-        [HttpPost("{id:guid}/devices/assign")]
-        [Consumes(MediaTypeNames.Application.Json)]
+
+        [HttpPut("{id:guid}/devices/manipulate")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> AssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto deviceForAssignDto)
-        {
-            deviceForAssignDto.AssignType = AssetAssignType.Adding;
-            var result = await _employeeService.AssignDeviceAsync(id, deviceForAssignDto.Id);
-            
-            return result ? NoContent() : NotFound();
-        }
-        
-        [HttpPost("{id:guid}/devices/unassign")]
-        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> ManipulateEmployeeDevice(Guid id, [FromQuery] AssetForAssignDto assetForAssign)
+            => await _employeeService.ManipulateDeviceAsync(id, assetForAssign) ? NoContent() : NotFound();
+
+        [HttpPut("{id:guid}/licenses/manipulate")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UnAssignEmployeeProject(Guid id, [FromBody] DeviceForAssignDto deviceForAssignDto)
-        {
-            deviceForAssignDto.AssignType = AssetAssignType.Removing;
-            var result = await _employeeService.UnAssignDeviceAsync(id, deviceForAssignDto.Id);
-            
-            return result ? NoContent() : NotFound();
-        }
-        
+        public async Task<IActionResult> ManipulateEmployeeLicense(Guid id, [FromQuery] AssetForAssignDto assetForAssign)
+            => await _employeeService.ManipulateLicenseAsync(id, assetForAssign) ? NoContent() : NotFound();
     }
 }

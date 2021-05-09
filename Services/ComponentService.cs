@@ -73,7 +73,7 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, ComponentForUpdateDto componentForUpdate)
         {
-            var component = await _repositoryManager.Component.GetComponentAsync(id);
+            var component = await _repositoryManager.Component.GetComponentAsync(id, true);
 
             if (component == null)
             {

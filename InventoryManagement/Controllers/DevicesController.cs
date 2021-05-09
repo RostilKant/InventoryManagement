@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
+using Entities.Enums;
 using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +13,8 @@ using Services.Contracts;
 namespace InventoryManagement.Controllers
 {
     [Route("api/devices")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
     public class DevicesController : ControllerBase
     {
@@ -25,35 +30,54 @@ namespace InventoryManagement.Controllers
         {
             var (devices, metadata) = await _deviceService.GetManyAsync(deviceParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-            
+
             return Ok(devices);
         }
-        
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetDevice(Guid id) =>
             Ok(await _deviceService.GetOneById(id));
-        
+
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> PostProject([FromBody] DeviceForCreationDto projectForCreation)
+        public async Task<IActionResult> PostDevice([FromBody] DeviceForCreationDto projectForCreation)
         {
             var projectDto = await _deviceService.CreateAsync(projectForCreation);
             return CreatedAtAction("GetDevices", new {id = projectDto.Id}, projectDto);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteProject(Guid id)
+        public async Task<IActionResult> DeleteDevice(Guid id)
         {
             var project = await _deviceService.DeleteAsync(id);
             return project ? NoContent() : NotFound();
         }
-        
+
         [HttpPut("{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] DeviceForUpdateDto projectForUpdate)
+        public async Task<IActionResult> UpdateDevice(Guid id, [FromBody] DeviceForUpdateDto projectForUpdate)
         {
-            var project = await _deviceService.UpdateAsync(id, projectForUpdate);
-            return project ? NoContent() : NotFound();
+            var result = await _deviceService.UpdateAsync(id, projectForUpdate);
+            return result ? NoContent() : NotFound();
         }
+
+        [HttpPut("{id:guid}/accessories/manipulate")]
+        public async Task<IActionResult> ManipulateDeviceAccessory(Guid id,
+            [FromQuery] AssetForAssignDto assetForAssign)
+            => await _deviceService.ManipulateAccessoryAsync(id, assetForAssign) ? NoContent() : NotFound();
+
+
+        [HttpPut("{id:guid}/components/manipulate")]
+        public async Task<IActionResult> ManipulateDeviceComponent(Guid id,
+            [FromQuery] AssetForAssignDto assetForAssign)
+            => await _deviceService.ManipulateComponentAsync(id, assetForAssign) ? NoContent() : NotFound();
+
+
+        [HttpPut("{id:guid}/consumables/assign")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ManipulateDeviceConsumable(Guid id,
+            [FromQuery] AssetForAssignDto assetForAssign)
+            => await _deviceService.ManipulateConsumableAsync(id, assetForAssign) ? NoContent() : NotFound();
     }
 }

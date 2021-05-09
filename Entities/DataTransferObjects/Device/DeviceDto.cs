@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Entities.DataTransferObjects.Accessory;
+using Entities.DataTransferObjects.Component;
+using Entities.DataTransferObjects.Consumable;
 
 namespace Entities.DataTransferObjects.Device
 {
@@ -45,5 +49,9 @@ namespace Entities.DataTransferObjects.Device
         public string MacAddress { get; set; }
         
         public string Notes { get; set; }
+        
+        public ICollection<ComponentDto> Components { get; set; }
+        public ICollection<AccessoryDto> Accessories { get; set; }
+        public ICollection<ConsumableDto> Consumables { get; set; }
     }
 }

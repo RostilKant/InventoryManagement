@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
+using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.Extensions.Logging;
@@ -41,9 +44,7 @@ namespace Services
             var device = await _repositoryManager.Device.GetDeviceAsync(id);
             
             if (device == null)
-            {
-                _logger.LogError($"Device with id {id} doesn't exist in the db");
-            }
+                _logger.LogError("Device with id {Id} doesn't exist in the db", id);
 
             return _mapper.Map<DeviceDto>(device);
         }
@@ -70,13 +71,109 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, DeviceForUpdateDto deviceForUpdate)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id);
+            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
             _mapper.Map(deviceForUpdate, device);
             
             _repositoryManager.Device.UpdateDevice(device);
             await _repositoryManager.SaveAsync();
             
             return device != null;
+        }
+
+        public async Task<bool> ManipulateAccessoryAsync(Guid id, AssetForAssignDto assetForAssign)
+        {
+            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
+            var accessory = await _repositoryManager.Accessory.GetAccessoryAsync(assetForAssign.AssetId);
+            
+            if (accessory == null || device == null)
+                return false;
+            
+            var tryFindAccessory = device.Accessories?.SingleOrDefault(x => x.Id.Equals(assetForAssign.AssetId));
+            
+            switch (assetForAssign.AssignType)
+            {
+                case AssetAssignType.Adding when tryFindAccessory != null:
+                    _logger.LogWarning("Accessory with id {Id} is already exists", accessory.Id);
+                    return false;
+                case AssetAssignType.Removing when tryFindAccessory == null:
+                    _logger.LogWarning("Accessory with id {Id} doesn't exist", accessory.Id);
+                    return false;
+                case AssetAssignType.Adding:
+                    device.Accessories?.Add(accessory);
+                    break;
+                case AssetAssignType.Removing:
+                    device.Accessories?.Remove(tryFindAccessory);
+                    break;
+            }
+            
+            _repositoryManager.Device.UpdateDevice(device);
+            await _repositoryManager.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<bool> ManipulateComponentAsync(Guid id, AssetForAssignDto assetForAssign)
+        {
+            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
+            var component = await _repositoryManager.Component.GetComponentAsync(assetForAssign.AssetId);
+            
+            if (component == null || device == null)
+                return false;
+            
+            var tryFindComponent = device.Components?.SingleOrDefault(x => x.Id.Equals(assetForAssign.AssetId));
+            
+            switch (assetForAssign.AssignType)
+            {
+                case AssetAssignType.Adding when tryFindComponent != null:
+                    _logger.LogWarning("Component with id {Id} is already exists", component.Id);
+                    return false;
+                case AssetAssignType.Removing when tryFindComponent == null:
+                    _logger.LogWarning("Component with id {Id} doesn't exist", component.Id);
+                    return false;
+                case AssetAssignType.Adding:
+                    device.Components?.Add(component);
+                    break;
+                case AssetAssignType.Removing:
+                    device.Components?.Remove(tryFindComponent);
+                    break;
+            }
+            
+            _repositoryManager.Device.UpdateDevice(device);
+            await _repositoryManager.SaveAsync();
+
+            return true;    
+        }
+
+        public async Task<bool> ManipulateConsumableAsync(Guid id, AssetForAssignDto assetForAssign)
+        {
+            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
+            var consumable = await _repositoryManager.Consumable.GetConsumableAsync(assetForAssign.AssetId);
+            
+            if (consumable == null || device == null)
+                return false;
+            
+            var tryFindConsumable = device.Consumables?.SingleOrDefault(x => x.Id.Equals(assetForAssign.AssetId));
+            
+            switch (assetForAssign.AssignType)
+            {
+                case AssetAssignType.Adding when tryFindConsumable != null:
+                    _logger.LogWarning("Consumable with id {Id} is already exists", consumable.Id);
+                    return false;
+                case AssetAssignType.Removing when tryFindConsumable == null:
+                    _logger.LogWarning("Consumable with id {Id} doesn't exist", consumable.Id);
+                    return false;
+                case AssetAssignType.Adding:
+                    device.Consumables?.Add(consumable);
+                    break;
+                case AssetAssignType.Removing:
+                    device.Consumables?.Remove(tryFindConsumable);
+                    break;
+            }
+            
+            _repositoryManager.Device.UpdateDevice(device);
+            await _repositoryManager.SaveAsync();
+
+            return true;
         }
     }
 }

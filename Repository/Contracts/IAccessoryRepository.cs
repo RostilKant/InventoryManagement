@@ -8,7 +8,7 @@ namespace Repository.Contracts
     public interface IAccessoryRepository : IRepositoryBase<Accessory>
     {
         Task<PagedList<Accessory>> GetAllAccessoriesAsync(AccessoryParameters accessoryParameters);
-        Task<Accessory> GetAccessoryAsync(Guid id);
+        Task<Accessory> GetAccessoryAsync(Guid id, bool trackChanges = false);
         void UpdateAccessory(Accessory accessory);
         void CreateAccessory(Accessory accessory);
         void DeleteAccessory(Accessory accessory);

@@ -18,14 +18,15 @@ namespace Repository
         public async Task<PagedList<Consumable>> GetAllConsumablesAsync(ConsumableParameters consumableParameters)
         {
             var result = await FindAll()
+                .Include(x => x.Device)
                 .ToListAsync();
 
             return PagedList<Consumable>.ToPagedList(result, consumableParameters.PageNumber,
                 consumableParameters.PageSize);
         }
 
-        public async Task<Consumable> GetConsumableAsync(Guid id) =>
-            await FindByCondition(x => x.Id.Equals(id))
+        public async Task<Consumable> GetConsumableAsync(Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id.Equals(id), trackChanges)
                 .SingleOrDefaultAsync();
 
 

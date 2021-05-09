@@ -26,14 +26,20 @@ namespace Repository
                 .Search(deviceParameters.SearchTerm)
                 .Sort(deviceParameters.OrderBy)
                 .Include(x => x.Employee)
+                .Include(x => x.Accessories)
+                .Include(x => x.Components)
+                .Include(x => x.Consumables)
                 .ToListAsync();
 
             return PagedList<Device>.ToPagedList(result, deviceParameters.PageNumber, deviceParameters.PageSize);
         }
 
-        public async Task<Device> GetDeviceAsync(Guid id) =>
-            await FindByCondition(x => x.Id == id)
+        public async Task<Device> GetDeviceAsync(Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id.Equals(id), trackChanges)
                 .Include(x => x.Employee)
+                .Include(x => x.Accessories)
+                .Include(x => x.Components)
+                .Include(x => x.Consumables)
                 .SingleOrDefaultAsync();
 
         public void UpdateDevice(Device device) => Update(device);

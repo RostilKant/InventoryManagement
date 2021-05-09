@@ -8,7 +8,7 @@ namespace Repository.Contracts
     public interface ILicenseRepository : IRepositoryBase<License>
     {
         Task<PagedList<License>> GetAllLicensesAsync(LicenseParameters licenseParameters);
-        Task<License> GetLicenseAsync(Guid id);
+        Task<License> GetLicenseAsync(Guid id, bool trackChanges = false);
         void UpdateLicense(License license);
         void CreateLicense(License license);
         void DeleteLicense(License license);

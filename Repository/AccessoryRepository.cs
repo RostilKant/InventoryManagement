@@ -18,13 +18,14 @@ namespace Repository
         public async Task<PagedList<Accessory>> GetAllAccessoriesAsync(AccessoryParameters accessoryParameters)
         {
             var result = await FindAll()
+                .Include(x => x.Device)
                 .ToListAsync();
             
             return PagedList<Accessory>.ToPagedList(result, accessoryParameters.PageNumber, accessoryParameters.PageSize);
         }
 
-        public async Task<Accessory> GetAccessoryAsync(Guid id) => 
-            await FindByCondition(x => x.Id.Equals(id))
+        public async Task<Accessory> GetAccessoryAsync(Guid id, bool trackChanges = false) => 
+            await FindByCondition(x => x.Id.Equals(id), trackChanges)
                 .SingleOrDefaultAsync();
 
 

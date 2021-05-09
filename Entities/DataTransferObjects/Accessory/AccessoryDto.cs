@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Entities.DataTransferObjects.Device;
 using Entities.Enums;
 
 namespace Entities.DataTransferObjects.Accessory
@@ -31,5 +32,7 @@ namespace Entities.DataTransferObjects.Accessory
         
         [Required(ErrorMessage = "PurchaseDate is required field")]
         public DateTime PurchaseDate { get; set; }
+        
+        public DeviceDto Device { get; set; }
     }
 }

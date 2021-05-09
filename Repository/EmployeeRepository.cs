@@ -25,14 +25,16 @@ namespace Repository
                 .Search(employeeParameters.SearchTerm)
                 .Sort(employeeParameters.OrderBy)
                 .Include(x => x.Devices)
+                .Include(x => x.Licenses)
                 .ToListAsync();
             
             return PagedList<Employee>.ToPagedList(result, employeeParameters.PageNumber, employeeParameters.PageSize);
         }
 
-        public async Task<Employee> GetEmployeeAsync(Guid id) =>
-            await FindByCondition(x => x.Id == id)
+        public async Task<Employee> GetEmployeeAsync(Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id == id, trackChanges)
                 .Include(x => x.Devices)
+                .Include(x => x.Licenses)
                 .SingleOrDefaultAsync();
 
         public void UpdateEmployee(Employee employee) => Update(employee);

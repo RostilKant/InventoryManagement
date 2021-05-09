@@ -9,7 +9,7 @@ namespace Repository.Contracts
     public interface IDeviceRepository : IRepositoryBase<Device>
     {
         Task<PagedList<Device>> GetAllDevicesAsync(DeviceParameters deviceParameters);
-        Task<Device> GetDeviceAsync(Guid id);
+        Task<Device> GetDeviceAsync(Guid id, bool trackChanges = false);
         void UpdateDevice(Device device);
         void CreateDevice(Device device);
         void DeleteDevice(Device device);

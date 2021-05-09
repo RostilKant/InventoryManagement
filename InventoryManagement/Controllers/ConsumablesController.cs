@@ -1,14 +1,18 @@
 using System;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DataTransferObjects.Consumable;
 using Entities.RequestFeatures;
+using InventoryManagement.ActionFilters;
 using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
     [Route("api/[controller]")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
     public class ConsumablesController : ControllerBase
     {
@@ -38,6 +42,7 @@ namespace InventoryManagement.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PutConsumable(Guid id, ConsumableForUpdateDto consumableForUpdate)
         {
             var consumable = await _consumableService.UpdateAsync(id, consumableForUpdate);
@@ -46,6 +51,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostConsumable(ConsumableForCreationDto consumableForCreation)
         {
             var consumable = await _consumableService.CreateAsync(consumableForCreation);

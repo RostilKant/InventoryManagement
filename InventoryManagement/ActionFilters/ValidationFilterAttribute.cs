@@ -24,14 +24,14 @@ namespace InventoryManagement.ActionFilters
             
             if (param.Equals(null))
             {
-                _logger.LogError($"Object sent from client is null. Controller: {controller}, action: {action}");
+                _logger.LogError("Object sent from client is null. Controller: {Controller}, action: {Action}", controller, action);
                 context.Result = new BadRequestObjectResult($"Object is null. Controller: {controller}, action: {action}");
                 return;
             }
             
             if (!context.ModelState.IsValid)
             {
-                _logger.LogError($"Invalid model state for the object. Controller:{controller}, action: {action}");
+                _logger.LogError("Invalid model state for the object. Controller: {Controller}, action: {Action}", controller, action);
                 context.Result = new UnprocessableEntityObjectResult(context.ModelState);
             }
         }

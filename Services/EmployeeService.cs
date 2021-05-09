@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Employee;
+using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.Extensions.Logging;
@@ -86,45 +88,65 @@ namespace Services
             return true;
         }
         
-        public async Task<bool> AssignDeviceAsync(Guid id, Guid deviceId)
+        public async Task<bool> ManipulateDeviceAsync(Guid id, AssetForAssignDto assetForAssign)
         {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
-            var device = await _repositoryManager.Device.GetDeviceAsync(deviceId);
-
-            if (employee == null || device == null)
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id, true);
+            var device = await _repositoryManager.Device.GetDeviceAsync(assetForAssign.AssetId);
+            
+            if (device == null || employee == null)
                 return false;
             
-            _repositoryManager.Employee.UpdateEmployee(employee);
-
-            if (employee.Devices.Select(x => x.Id).Contains(device.Id))
+            var tryFindDevice = employee.Devices?.SingleOrDefault(x => x.Id.Equals(assetForAssign.AssetId));
+            
+            switch (assetForAssign.AssignType)
             {
-                _logger.LogWarning("Project with id {Id} is already exists", id);
-                return false;
+                case AssetAssignType.Adding when tryFindDevice != null:
+                    _logger.LogWarning("License with id {Id} is already exists", device.Id);
+                    return false;
+                case AssetAssignType.Removing when tryFindDevice == null:
+                    _logger.LogWarning("License with id {Id} doesn't exist", device.Id);
+                    return false;
+                case AssetAssignType.Adding:
+                    employee.Devices?.Add(device);
+                    break;
+                case AssetAssignType.Removing:
+                    employee.Devices?.Remove(tryFindDevice);
+                    break;
             }
             
-            employee.Devices.Add(device);
+            _repositoryManager.Employee.UpdateEmployee(employee);
             await _repositoryManager.SaveAsync();
 
             return true;
         }
-        
-        public async Task<bool> UnAssignDeviceAsync(Guid id, Guid deviceId)
-        {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
-            var device = employee.Devices.SingleOrDefault(x => x.Id == deviceId);
 
-            if (device == null)
+        public async Task<bool> ManipulateLicenseAsync(Guid id, AssetForAssignDto assetForAssign)
+        {
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id, true);
+            var license = await _repositoryManager.License.GetLicenseAsync(assetForAssign.AssetId);
+            
+            if (license == null || employee == null)
                 return false;
             
-            _repositoryManager.Employee.UpdateEmployee(employee);
-
-            if (!employee.Devices.Select(x => x.Id).Contains(device.Id))
+            var tryFindLicense = employee.Licenses?.SingleOrDefault(x => x.Id.Equals(assetForAssign.AssetId));
+            
+            switch (assetForAssign.AssignType)
             {
-                _logger.LogWarning("Project with id {Id} doesn't exist", id);
-                return false;
+                case AssetAssignType.Adding when tryFindLicense != null:
+                    _logger.LogWarning("License with id {Id} is already exists", license.Id);
+                    return false;
+                case AssetAssignType.Removing when tryFindLicense == null:
+                    _logger.LogWarning("License with id {Id} doesn't exist", license.Id);
+                    return false;
+                case AssetAssignType.Adding:
+                    employee.Licenses?.Add(license);
+                    break;
+                case AssetAssignType.Removing:
+                    employee.Licenses?.Remove(tryFindLicense);
+                    break;
             }
-
-            employee.Devices.Remove(device);
+            
+            _repositoryManager.Employee.UpdateEmployee(employee);
             await _repositoryManager.SaveAsync();
 
             return true;

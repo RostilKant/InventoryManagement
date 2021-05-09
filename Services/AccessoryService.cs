@@ -72,7 +72,7 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, AccessoryForUpdateDto accessoryForUpdate)
         {
-            var accessory = await _repositoryManager.Accessory.GetAccessoryAsync(id);
+            var accessory = await _repositoryManager.Accessory.GetAccessoryAsync(id, true);
 
             if (accessory == null)
             {

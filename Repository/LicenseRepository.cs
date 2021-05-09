@@ -18,13 +18,14 @@ namespace Repository
         public async Task<PagedList<License>> GetAllLicensesAsync(LicenseParameters licenseParameters)
         {
             var result = await FindAll()
+                .Include(x => x.Employees)
                 .ToListAsync();
             
             return PagedList<License>.ToPagedList(result, licenseParameters.PageNumber, licenseParameters.PageSize);
         }
 
-        public async Task<License> GetLicenseAsync(Guid id) =>
-            await FindByCondition(x => x.Id.Equals(id))
+        public async Task<License> GetLicenseAsync(Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id.Equals(id), trackChanges)
                 .SingleOrDefaultAsync();
 
         public void UpdateLicense(License license) => Update(license);

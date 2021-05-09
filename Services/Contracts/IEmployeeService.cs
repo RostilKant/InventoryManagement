@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Employee;
 using Entities.RequestFeatures;
 
@@ -14,7 +15,8 @@ namespace Services.Contracts
         public Task<bool> DeleteAsync(Guid id);
         public Task<bool> UpdateAsync(Guid id, EmployeeForUpdateDto employeeForUpdate);
 
-        public Task<bool> AssignDeviceAsync(Guid id, Guid deviceId);
-        public Task<bool> UnAssignDeviceAsync(Guid id, Guid deviceId);
+        public Task<bool> ManipulateDeviceAsync(Guid id, AssetForAssignDto assetForAssign);
+        
+        public Task<bool> ManipulateLicenseAsync(Guid id, AssetForAssignDto assetForAssign);
     }
 }

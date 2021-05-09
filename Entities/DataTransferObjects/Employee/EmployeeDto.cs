@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities.DataTransferObjects.Device;
+using Entities.DataTransferObjects.License;
 
 namespace Entities.DataTransferObjects.Employee
 {
@@ -28,7 +29,8 @@ namespace Entities.DataTransferObjects.Employee
         public string Country { get; set; }
         
         public string ZipCode { get; set; }
-        
+
         public ICollection<DeviceDto> Devices { get; set; }
+        public ICollection<LicenseDto> Licenses { get; set; }
     }
 }

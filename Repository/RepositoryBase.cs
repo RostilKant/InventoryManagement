@@ -21,10 +21,13 @@ namespace Repository
             ApplicationContext.Set<T>()
                 .AsNoTracking();
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) =>
-            ApplicationContext.Set<T>()
-                .Where(expression)
-                .AsNoTracking();
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false) =>
+            !trackChanges
+                ? ApplicationContext.Set<T>()
+                    .Where(expression)
+                    .AsNoTracking()
+                : ApplicationContext.Set<T>()
+                    .Where(expression);
 
         public void Create(T entity) => ApplicationContext.Set<T>().Add(entity);
 

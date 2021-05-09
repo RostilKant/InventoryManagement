@@ -1,14 +1,18 @@
 using System;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Entities.DataTransferObjects.License;
 using Entities.RequestFeatures;
+using InventoryManagement.ActionFilters;
 using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
     [Route("api/[controller]")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
     public class LicensesController : ControllerBase
     {
@@ -37,6 +41,7 @@ namespace InventoryManagement.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PutLicense(Guid id, LicenseForUpdateDto licenseForUpdate)
         {
             var license = await _licenseService.UpdateAsync(id, licenseForUpdate);
@@ -45,6 +50,7 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostLicense(LicenseForCreationDto licenseForCreation)
         {
             var license = await _licenseService.CreateAsync(licenseForCreation);

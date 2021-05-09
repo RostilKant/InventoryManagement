@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
 
 namespace Entities.DataTransferObjects.License
@@ -33,5 +35,7 @@ namespace Entities.DataTransferObjects.License
         
         [Required]
         public bool IsReAssignable { get; set; }
+        
+        public ICollection<EmployeeDto> Employees { get; set; }
     }
 }

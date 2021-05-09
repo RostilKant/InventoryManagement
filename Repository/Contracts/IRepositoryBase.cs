@@ -8,7 +8,7 @@ namespace Repository.Contracts
     public interface IRepositoryBase<T>
     {
         IQueryable<T> FindAll();
-        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
+        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false);
         void Create(T entity);
         void CreateRange(IEnumerable<T> entities);
         void Update(T entity);
