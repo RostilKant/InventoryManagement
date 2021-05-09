@@ -2,7 +2,7 @@
 {
     public enum AssetAssignType
     {
-        Removing = 1,
-        Adding = 2
+        Removing = 0,
+        Adding = 1
     }
 }

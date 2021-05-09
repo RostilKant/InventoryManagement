@@ -5,7 +5,6 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
-using Repository.Extensions;
 
 namespace Repository
 {
@@ -19,9 +18,6 @@ namespace Repository
         public async Task<PagedList<Accessory>> GetAllAccessoriesAsync(AccessoryParameters accessoryParameters)
         {
             var result = await FindAll()
-                .FilterBy(accessoryParameters)
-                .Search(accessoryParameters.SearchTerm)
-                .Sort(accessoryParameters.OrderBy)
                 .Include(x => x.Device)
                 .ToListAsync();
             

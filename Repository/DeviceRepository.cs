@@ -22,7 +22,7 @@ namespace Repository
         public async Task<PagedList<Device>> GetAllDevicesAsync(DeviceParameters deviceParameters)
         {
             var result = await FindAll()
-                .FilterBy(deviceParameters)
+                .FilterBy(deviceParameters.GetFilters(), deviceParameters)
                 .Search(deviceParameters.SearchTerm)
                 .Sort(deviceParameters.OrderBy)
                 .Include(x => x.Employee)

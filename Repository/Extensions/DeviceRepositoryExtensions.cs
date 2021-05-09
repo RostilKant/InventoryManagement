@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Entities.Enums;
@@ -9,10 +10,9 @@ namespace Repository.Extensions
 {
     public static class DeviceRepositoryExtensions
     {
-        public static IQueryable<Device> FilterBy(this IQueryable<Device> queryable, DeviceParameters deviceParameters)
+        public static IQueryable<Device> FilterBy(this IQueryable<Device> queryable, IEnumerable<string> filters,
+            DeviceParameters deviceParameters)
         {
-            var filters = deviceParameters.GetFilters();
-            
             foreach (var filter in filters)
             {
                 queryable = filter switch
