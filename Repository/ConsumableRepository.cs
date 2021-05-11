@@ -5,6 +5,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -15,9 +16,13 @@ namespace Repository
         {
         }
 
-        public async Task<PagedList<Consumable>> GetAllConsumablesAsync(ConsumableParameters consumableParameters)
+        public async Task<PagedList<Consumable>> GetAllConsumablesAsync(Guid userId,
+            ConsumableParameters consumableParameters)
         {
             var result = await FindAll()
+                .FilterBy(consumableParameters)
+                .Search(consumableParameters.SearchTerm)
+                .Sort(consumableParameters.OrderBy)
                 .Include(x => x.Device)
                 .ToListAsync();
 
@@ -25,7 +30,7 @@ namespace Repository
                 consumableParameters.PageSize);
         }
 
-        public async Task<Consumable> GetConsumableAsync(Guid id, bool trackChanges = false) =>
+        public async Task<Consumable> GetConsumableAsync(Guid userId, Guid id, bool trackChanges = false) =>
             await FindByCondition(x => x.Id.Equals(id), trackChanges)
                 .SingleOrDefaultAsync();
 

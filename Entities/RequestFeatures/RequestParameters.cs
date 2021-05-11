@@ -60,9 +60,9 @@ namespace Entities.RequestFeatures
         
         public string Name { get; set; }
 
-        public AccessoryCategory Category { get; set; }
-        
-        public AssetStatus Status { get; set; }
+        public AccessoryCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
         
         public string ModelNumber { get; set; }
 
@@ -79,11 +79,11 @@ namespace Entities.RequestFeatures
         }
    
         public string Name { get; set; }
-        
-        public ConsumableCategory Category { get; set; }
 
-        public AssetStatus Status { get; set; }
-        
+        public ConsumableCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
+
         public string Manufacturer { get; set; }
         
         public string OfficeAddress { get; set; }
@@ -99,10 +99,10 @@ namespace Entities.RequestFeatures
         public string Name { get; set; }
 
         public string Serial { get; set; }
-        
-        public ComponentCategory Category { get; set; }
-        
-        public AssetStatus Status { get; set; }
+
+        public ComponentCategory? Category { get; set; } = null;
+
+        public AssetStatus? Status { get; set; } = null;
         
         public string Manufacturer { get; set; }
         
@@ -117,15 +117,15 @@ namespace Entities.RequestFeatures
         }
    
         public string Name { get; set; }
-        
-        public LicenseCategory Category { get; set; }
+
+        public LicenseCategory? Category { get; set; } = null;
         
         public string ProductKey { get; set; }
         
         public string LicensedToEmail { get; set; }
         
         public string Manufacturer { get; set; }
-        
-        public bool IsReAssignable { get; set; }
+
+        public bool? IsReAssignable { get; set; } = null;
     }
 }

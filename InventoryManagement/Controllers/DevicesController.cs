@@ -6,12 +6,14 @@ using Entities.DataTransferObjects.Device;
 using Entities.Enums;
 using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize]
     [Route("api/devices")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
@@ -60,6 +62,18 @@ namespace InventoryManagement.Controllers
             var result = await _deviceService.UpdateAsync(id, projectForUpdate);
             return result ? NoContent() : NotFound();
         }
+        
+        [HttpGet("{id:guid}/components")]
+        public async Task<IActionResult> GetDeviceComponents(Guid id) =>
+            Ok((await _deviceService.GetOneById(id)).Components);
+        
+        [HttpGet("{id:guid}/consumables")]
+        public async Task<IActionResult> GetDeviceConsumables(Guid id) =>
+            Ok((await _deviceService.GetOneById(id)).Consumables);
+        
+        [HttpGet("{id:guid}/accessories")]
+        public async Task<IActionResult> GetDeviceAccessories(Guid id) =>
+            Ok((await _deviceService.GetOneById(id)).Accessories);
 
         [HttpPut("{id:guid}/accessories/manipulate")]
         public async Task<IActionResult> ManipulateDeviceAccessory(Guid id,

@@ -15,7 +15,7 @@ namespace Repository.Extensions
             EmployeeParameters employeeParameters)
         {
             var filters = employeeParameters.GetFilters();
-            
+                
             foreach (var filter in filters)
             {
                 queryable = filter switch

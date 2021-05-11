@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Entities.Enums;
+using Entities.IdentityModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities.Models
@@ -53,5 +54,8 @@ namespace Entities.Models
         
         public ICollection<Device> Devices { get; set; }
         public ICollection<License> Licenses { get; set; }
+        
+        
+        public User User { get; set; }
     }
 }

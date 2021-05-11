@@ -5,6 +5,8 @@ using Entities.DataTransferObjects.Consumable;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
 using Entities.DataTransferObjects.License;
+using Entities.DataTransferObjects.User;
+using Entities.IdentityModels;
 using Entities.Models;
 
 namespace InventoryManagement
@@ -20,8 +22,9 @@ namespace InventoryManagement
                 .ForMember(c => c.FullName,
                     options =>
                         options.MapFrom(x => $"{x.FirstName} {x.LastName}"));
-            
+
             CreateMap<EmployeeForCreationDto, Employee>();
+            
             CreateMap<EmployeeForUpdateDto, Employee>();
 
             CreateMap<Device, DeviceDto>();
@@ -43,6 +46,8 @@ namespace InventoryManagement
             CreateMap<License, LicenseDto>();
             CreateMap<LicenseForCreationDto, License>();
             CreateMap<LicenseForUpdateDto, License>();
+
+            CreateMap<UserForRegistrationDto, User>();
         }
     }
 }

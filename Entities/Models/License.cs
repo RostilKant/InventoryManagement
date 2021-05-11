@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Entities.Enums;
+using Entities.IdentityModels;
 
 namespace Entities.Models
 {
@@ -38,5 +39,8 @@ namespace Entities.Models
         public bool IsReAssignable { get; set; }
         
         public ICollection<Employee> Employees { get; set; }  
+        
+        
+        public User User { get; set; }
     }
 }

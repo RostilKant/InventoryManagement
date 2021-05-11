@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Entities.Enums;
+using Entities.IdentityModels;
 
 namespace Entities.Models
 {
@@ -35,5 +36,8 @@ namespace Entities.Models
         public DateTime PurchaseDate { get; set; }
         
         public Device Device { get; set; }
+        
+        
+        public User User { get; set; }
     }
 }

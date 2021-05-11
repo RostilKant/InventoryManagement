@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.Device;
@@ -7,15 +8,15 @@ using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
 using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
     [Route("api/employees")]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [Produces(MediaTypeNames.Application.Json)]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -31,7 +32,7 @@ namespace InventoryManagement.Controllers
         {
             var (employees, metadata) = await _employeeService.GetManyAsync(employeeParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
+            
             return Ok(employees);
         }
 
@@ -65,12 +66,18 @@ namespace InventoryManagement.Controllers
             return employee ? NoContent() : NotFound();
         }
 
-
         [HttpGet("{id:guid}/devices")]
         public async Task<IActionResult> GetEmployeeDevices(Guid id)
         {
             var employee = await _employeeService.GetByIdAsync(id);
             return Ok(employee.Devices);
+        }
+        
+        [HttpGet("{id:guid}/licenses")]
+        public async Task<IActionResult> GetEmployeeLicenses(Guid id)
+        {
+            var employee = await _employeeService.GetByIdAsync(id);
+            return Ok(employee.Licenses);
         }
 
         [HttpPut("{id:guid}/devices/manipulate")]
@@ -80,7 +87,8 @@ namespace InventoryManagement.Controllers
 
         [HttpPut("{id:guid}/licenses/manipulate")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> ManipulateEmployeeLicense(Guid id, [FromQuery] AssetForAssignDto assetForAssign)
+        public async Task<IActionResult> ManipulateEmployeeLicense(Guid id,
+            [FromQuery] AssetForAssignDto assetForAssign)
             => await _employeeService.ManipulateLicenseAsync(id, assetForAssign) ? NoContent() : NotFound();
     }
 }

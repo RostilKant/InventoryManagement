@@ -8,9 +8,11 @@ using Entities.DataTransferObjects.Device;
 using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Repository.Contracts;
 using Services.Contracts;
+using Services.ServiceExtensions;
 
 namespace Services
 {
@@ -19,17 +21,23 @@ namespace Services
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILogger<DeviceService> _logger;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IUserService _userService;
 
-        public DeviceService(IRepositoryManager repositoryManager, ILogger<DeviceService> logger, IMapper mapper)
+        private Guid CurrentUserId =>  _contextAccessor.HttpContext?.User.GetCurrentUserId() ?? Guid.Empty;
+
+        public DeviceService(IRepositoryManager repositoryManager, ILogger<DeviceService> logger, IMapper mapper, IHttpContextAccessor contextAccessor, IUserService userService)
         {
             _repositoryManager = repositoryManager;
             _logger = logger;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
+            _userService = userService;
         }
 
         public async Task<(IEnumerable<DeviceDto>, Metadata)> GetManyAsync(DeviceParameters deviceParameters)
         {
-            var devices = await _repositoryManager.Device.GetAllDevicesAsync(deviceParameters);
+            var devices = await _repositoryManager.Device.GetAllDevicesAsync(CurrentUserId, deviceParameters);
 
             if (devices == null)
             {
@@ -41,7 +49,7 @@ namespace Services
 
         public async Task<DeviceDto> GetOneById(Guid id)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, id);
             
             if (device == null)
                 _logger.LogError("Device with id {Id} doesn't exist in the db", id);
@@ -52,7 +60,8 @@ namespace Services
         public async Task<DeviceDto> CreateAsync(DeviceForCreationDto deviceForCreation)
         {
             var device = _mapper.Map<Device>(deviceForCreation);
-            
+
+            device = await _userService.BindAssetWithUserAsync(CurrentUserId, device);
             _repositoryManager.Device.CreateDevice(device);
             await _repositoryManager.SaveAsync();
 
@@ -61,7 +70,7 @@ namespace Services
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, id);
             
             _repositoryManager.Device.DeleteDevice(device);
             await _repositoryManager.SaveAsync();
@@ -71,7 +80,7 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, DeviceForUpdateDto deviceForUpdate)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, id, true);
             _mapper.Map(deviceForUpdate, device);
             
             _repositoryManager.Device.UpdateDevice(device);
@@ -82,8 +91,8 @@ namespace Services
 
         public async Task<bool> ManipulateAccessoryAsync(Guid id, AssetForAssignDto assetForAssign)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
-            var accessory = await _repositoryManager.Accessory.GetAccessoryAsync(assetForAssign.AssetId);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, id, true);
+            var accessory = await _repositoryManager.Accessory.GetAccessoryAsync(CurrentUserId, assetForAssign.AssetId);
             
             if (accessory == null || device == null)
                 return false;
@@ -114,8 +123,8 @@ namespace Services
 
         public async Task<bool> ManipulateComponentAsync(Guid id, AssetForAssignDto assetForAssign)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
-            var component = await _repositoryManager.Component.GetComponentAsync(assetForAssign.AssetId);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, id, true);
+            var component = await _repositoryManager.Component.GetComponentAsync(CurrentUserId, assetForAssign.AssetId);
             
             if (component == null || device == null)
                 return false;
@@ -146,8 +155,8 @@ namespace Services
 
         public async Task<bool> ManipulateConsumableAsync(Guid id, AssetForAssignDto assetForAssign)
         {
-            var device = await _repositoryManager.Device.GetDeviceAsync(id, true);
-            var consumable = await _repositoryManager.Consumable.GetConsumableAsync(assetForAssign.AssetId);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, id, true);
+            var consumable = await _repositoryManager.Consumable.GetConsumableAsync(CurrentUserId, assetForAssign.AssetId);
             
             if (consumable == null || device == null)
                 return false;

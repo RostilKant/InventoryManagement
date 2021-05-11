@@ -17,10 +17,11 @@ namespace Repository
         {
         }
 
-        public async Task<PagedList<Employee>> GetAllEmployees(EmployeeParameters employeeParameters)
+        public async Task<PagedList<Employee>> GetAllEmployees(Guid userId, EmployeeParameters employeeParameters)
         {
 
-            var result = await FindAll()
+            var result = 
+                await FindByCondition(x => x.User.Id.Equals(userId))
                 .FilterBy(employeeParameters)
                 .Search(employeeParameters.SearchTerm)
                 .Sort(employeeParameters.OrderBy)
@@ -31,8 +32,8 @@ namespace Repository
             return PagedList<Employee>.ToPagedList(result, employeeParameters.PageNumber, employeeParameters.PageSize);
         }
 
-        public async Task<Employee> GetEmployeeAsync(Guid id, bool trackChanges = false) =>
-            await FindByCondition(x => x.Id == id, trackChanges)
+        public async Task<Employee> GetEmployeeAsync(Guid userId, Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id.Equals(id) && x.User.Id.Equals(userId), trackChanges)
                 .Include(x => x.Devices)
                 .Include(x => x.Licenses)
                 .SingleOrDefaultAsync();

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Entities;
 using Entities.Models;
@@ -19,10 +17,10 @@ namespace Repository
         {
         }
 
-        public async Task<PagedList<Device>> GetAllDevicesAsync(DeviceParameters deviceParameters)
+        public async Task<PagedList<Device>> GetAllDevicesAsync(Guid userId, DeviceParameters deviceParameters)
         {
-            var result = await FindAll()
-                .FilterBy(deviceParameters.GetFilters(), deviceParameters)
+            var result = await FindByCondition(x => x.User.Id.Equals(userId))
+                .FilterBy(deviceParameters)
                 .Search(deviceParameters.SearchTerm)
                 .Sort(deviceParameters.OrderBy)
                 .Include(x => x.Employee)
@@ -34,8 +32,8 @@ namespace Repository
             return PagedList<Device>.ToPagedList(result, deviceParameters.PageNumber, deviceParameters.PageSize);
         }
 
-        public async Task<Device> GetDeviceAsync(Guid id, bool trackChanges = false) =>
-            await FindByCondition(x => x.Id.Equals(id), trackChanges)
+        public async Task<Device> GetDeviceAsync(Guid userId, Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id.Equals(id) && x.User.Id.Equals(userId), trackChanges)
                 .Include(x => x.Employee)
                 .Include(x => x.Accessories)
                 .Include(x => x.Components)
@@ -50,26 +48,5 @@ namespace Repository
         public async Task<IEnumerable<Device>> GetAllEmployeeDevicesAsync(Guid employeeId) =>
             await FindByCondition(x => x.Employee.Id.Equals(employeeId))
                 .ToListAsync();
-
-        private List<string> GetFilters(DeviceParameters deviceParameters)
-        {
-            var result = typeof(DeviceParameters)
-                .GetProperties(BindingFlags.Public
-                               | BindingFlags.Instance
-                               | BindingFlags.DeclaredOnly)
-                .ToList();
-
-            var ret = new List<string>();
-
-            foreach (var propertyInfo in result)
-            {
-                if (propertyInfo.GetValue(deviceParameters) != null)
-                {
-                    ret.Add(propertyInfo.Name);
-                }
-            }
-
-            return ret;
-        }
     }
 }

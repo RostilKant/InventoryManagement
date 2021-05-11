@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using InventoryManagement.ActionFilters;
 using InventoryManagement.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -33,11 +33,6 @@ namespace InventoryManagement
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddSwaggerGenNewtonsoftSupport();
-            
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "InventoryManagement", Version = "v1"});
-            });
 
             services.ConfigureCors();
             services.ConfigureSqlContext(Configuration);
@@ -49,6 +44,16 @@ namespace InventoryManagement
                 options.SuppressModelStateInvalidFilter = true;
             });
             services.AddScoped<ValidationFilterAttribute>();
+            services.AddMemoryCache();
+            
+            services.ConfigureRateLimitingOptions();
+            services.AddHttpContextAccessor();
+            
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJwt(Configuration);
+            services.ConfigureHttpContextAccessor();
+            services.ConfigureSwagger();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -57,7 +62,10 @@ namespace InventoryManagement
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "InventoryManagement v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "InventoryManagement v1");
+                });
             }
             else
             {
@@ -72,8 +80,11 @@ namespace InventoryManagement
             
             app.UseCors("CORS");
 
+            app.UseIpRateLimiting();
+            
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

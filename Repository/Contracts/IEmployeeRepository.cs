@@ -7,8 +7,8 @@ namespace Repository.Contracts
 {
     public interface IEmployeeRepository : IRepositoryBase<Employee>
     {
-        Task<PagedList<Employee>> GetAllEmployees(EmployeeParameters employeeParameters);
-        Task<Employee> GetEmployeeAsync(Guid id, bool trackChanges = false);
+        Task<PagedList<Employee>> GetAllEmployees(Guid userId, EmployeeParameters employeeParameters);
+        Task<Employee> GetEmployeeAsync(Guid userId, Guid id, bool trackChanges = false);
         void UpdateEmployee(Employee employee);
         void CreateEmployee(Employee employee);
         void DeleteEmployee(Employee employee);

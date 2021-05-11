@@ -5,6 +5,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -15,16 +16,20 @@ namespace Repository
         {
         }
 
-        public async Task<PagedList<Component>> GetAllComponentsAsync(ComponentParameters componentParameters)
+        public async Task<PagedList<Component>> GetAllComponentsAsync(Guid userId,
+            ComponentParameters componentParameters)
         {
             var result = await FindAll()
+                .FilterBy(componentParameters)
+                .Search(componentParameters.SearchTerm)
+                .Sort(componentParameters.OrderBy)
                 .Include(x => x.Device)
                 .ToListAsync();
             
             return PagedList<Component>.ToPagedList(result, componentParameters.PageNumber, componentParameters.PageSize);
         }
 
-        public async Task<Component> GetComponentAsync(Guid id, bool trackChanges = false) =>
+        public async Task<Component> GetComponentAsync(Guid userId, Guid id, bool trackChanges = false) =>
             await FindByCondition(x => x.Id.Equals(id), trackChanges)
                 .SingleOrDefaultAsync();
 

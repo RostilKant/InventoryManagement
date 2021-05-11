@@ -1,25 +1,30 @@
-﻿using Entities.Configuration;
+﻿using System;
+using Entities.Configuration;
+using Entities.IdentityModels;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public ApplicationContext(DbContextOptions options)
             : base(options)
-        {
-        }
+        { }
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<License> Licenses { get; set; }    
         public DbSet<Device> Devices { get; set; }
         public DbSet<Component> Components { get; set; }
         public DbSet<Accessory> Accessories { get; set; }
-        public DbSet<Consumable> Consumables { get; set; }  
-
+        public DbSet<Consumable> Consumables { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            
             modelBuilder.Entity<Employee>()
                 .HasMany(e => e.Licenses)
                 .WithMany(l => l.Employees);
@@ -90,6 +95,7 @@ namespace Entities
             
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new DeviceConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
     }
 }

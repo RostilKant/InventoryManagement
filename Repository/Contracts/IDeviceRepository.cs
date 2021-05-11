@@ -8,8 +8,8 @@ namespace Repository.Contracts
 {
     public interface IDeviceRepository : IRepositoryBase<Device>
     {
-        Task<PagedList<Device>> GetAllDevicesAsync(DeviceParameters deviceParameters);
-        Task<Device> GetDeviceAsync(Guid id, bool trackChanges = false);
+        Task<PagedList<Device>> GetAllDevicesAsync(Guid userId, DeviceParameters deviceParameters);
+        Task<Device> GetDeviceAsync(Guid userId, Guid id, bool trackChanges = false);
         void UpdateDevice(Device device);
         void CreateDevice(Device device);
         void DeleteDevice(Device device);

@@ -11,7 +11,9 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,6 +21,9 @@
         <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.5\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
       </Reference>
       <Reference Include="Microsoft.AspNetCore.Http.Features" />
+      <Reference Include="Microsoft.AspNetCore.Mvc.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.5\Microsoft.AspNetCore.Mvc.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Entities.Enums;
+using Entities.IdentityModels;
 
 namespace Entities.Models
 {
@@ -55,5 +56,8 @@ namespace Entities.Models
         public ICollection<Component> Components { get; set; }
         public ICollection<Accessory> Accessories { get; set; }
         public ICollection<Consumable> Consumables { get; set; }
+        
+        
+        public User User { get; set; }
     }
 }

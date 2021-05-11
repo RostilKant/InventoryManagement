@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities.DataTransferObjects;
@@ -8,35 +9,49 @@ using Entities.DataTransferObjects.Employee;
 using Entities.Enums;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Repository.Contracts;
 using Services.Contracts;
+using Services.ServiceExtensions;
 
 namespace Services
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly IRepositoryManager _repositoryManager;
+        private readonly IUserService _userService;
         private readonly ILogger<EmployeeService> _logger;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public EmployeeService(IRepositoryManager repositoryManager, ILogger<EmployeeService> logger, IMapper mapper)
+        private Guid CurrentUserId =>  _contextAccessor.HttpContext?.User.GetCurrentUserId() ?? Guid.Empty;
+
+        public EmployeeService(
+            IRepositoryManager repositoryManager,
+            IUserService userService,
+            ILogger<EmployeeService> logger, 
+            IMapper mapper, 
+            IHttpContextAccessor contextAccessor)
         {
             _repositoryManager = repositoryManager;
+            _userService = userService;
             _logger = logger;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
 
         public async Task<(IEnumerable<EmployeeDto>, Metadata)> GetManyAsync(EmployeeParameters employeeParameters)
         {
-            var employees = await _repositoryManager.Employee.GetAllEmployees(employeeParameters);
+            var employees = await _repositoryManager.Employee
+                .GetAllEmployees(CurrentUserId, employeeParameters);
             return (_mapper.Map<IEnumerable<EmployeeDto>>(employees), employees.Metadata);
         }
 
         public async Task<EmployeeDto> GetByIdAsync(Guid id)
         {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(CurrentUserId, id);
             
             if (employee == null)
                 _logger.LogInformation("There is no employee with {Id}", id);
@@ -47,7 +62,8 @@ namespace Services
         public async Task<EmployeeDto> CreateAsync(EmployeeForCreationDto employeeForCreation)
         {
             var employee = _mapper.Map<Employee>(employeeForCreation);
-            
+            employee = await _userService.BindAssetWithUserAsync(CurrentUserId, employee);
+
             _repositoryManager.Employee.CreateEmployee(employee);
             await _repositoryManager.SaveAsync();
 
@@ -56,7 +72,7 @@ namespace Services
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(CurrentUserId, id);
             
             if (employee == null)
             {
@@ -72,7 +88,7 @@ namespace Services
 
         public async Task<bool> UpdateAsync(Guid id, EmployeeForUpdateDto employeeForUpdate)
         {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id);
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(CurrentUserId, id);
             
             if (employee == null)
             {
@@ -90,8 +106,8 @@ namespace Services
         
         public async Task<bool> ManipulateDeviceAsync(Guid id, AssetForAssignDto assetForAssign)
         {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id, true);
-            var device = await _repositoryManager.Device.GetDeviceAsync(assetForAssign.AssetId);
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(CurrentUserId, id, true);
+            var device = await _repositoryManager.Device.GetDeviceAsync(CurrentUserId, assetForAssign.AssetId);
             
             if (device == null || employee == null)
                 return false;
@@ -122,8 +138,8 @@ namespace Services
 
         public async Task<bool> ManipulateLicenseAsync(Guid id, AssetForAssignDto assetForAssign)
         {
-            var employee = await _repositoryManager.Employee.GetEmployeeAsync(id, true);
-            var license = await _repositoryManager.License.GetLicenseAsync(assetForAssign.AssetId);
+            var employee = await _repositoryManager.Employee.GetEmployeeAsync(CurrentUserId, id, true);
+            var license = await _repositoryManager.License.GetLicenseAsync(CurrentUserId, assetForAssign.AssetId);
             
             if (license == null || employee == null)
                 return false;

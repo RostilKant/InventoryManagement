@@ -5,6 +5,7 @@ using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contracts;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -15,17 +16,20 @@ namespace Repository
         {
         }
 
-        public async Task<PagedList<License>> GetAllLicensesAsync(LicenseParameters licenseParameters)
+        public async Task<PagedList<License>> GetAllLicensesAsync(Guid userId, LicenseParameters licenseParameters)
         {
-            var result = await FindAll()
+            var result = await FindByCondition(x => x.User.Id.Equals(userId))
+                .FilterBy(licenseParameters)
+                .Search(licenseParameters.SearchTerm)
+                .Sort(licenseParameters.OrderBy)
                 .Include(x => x.Employees)
                 .ToListAsync();
             
             return PagedList<License>.ToPagedList(result, licenseParameters.PageNumber, licenseParameters.PageSize);
         }
 
-        public async Task<License> GetLicenseAsync(Guid id, bool trackChanges = false) =>
-            await FindByCondition(x => x.Id.Equals(id), trackChanges)
+        public async Task<License> GetLicenseAsync(Guid userId, Guid id, bool trackChanges = false) =>
+            await FindByCondition(x => x.Id.Equals(id) && x.User.Id.Equals(userId), trackChanges)
                 .SingleOrDefaultAsync();
 
         public void UpdateLicense(License license) => Update(license);
