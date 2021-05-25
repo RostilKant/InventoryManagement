@@ -16,6 +16,7 @@ using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize]
     [Route("api/employees")]
     [ApiController]
     public class EmployeesController : ControllerBase

@@ -27,6 +27,11 @@ namespace InventoryManagement.Controllers
             _deviceService = deviceService;
         }
 
+        /// <summary>
+        /// Get list of all devices
+        /// </summary>
+        /// <param name="deviceParameters"></param>
+        /// <returns>List of devices</returns>
         [HttpGet]
         public async Task<IActionResult> GetDevices([FromQuery] DeviceParameters deviceParameters)
         {
@@ -87,7 +92,7 @@ namespace InventoryManagement.Controllers
             => await _deviceService.ManipulateComponentAsync(id, assetForAssign) ? NoContent() : NotFound();
 
 
-        [HttpPut("{id:guid}/consumables/assign")]
+        [HttpPut("{id:guid}/consumables/manipulate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> ManipulateDeviceConsumable(Guid id,

@@ -18,8 +18,8 @@ namespace InventoryManagement.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
-            => 
-                await _authenticationService.RegisterUserAsync(userForRegistration, ModelState) ? 
+            =>
+                await _authenticationService.RegisterUserAsync(userForRegistration, ModelState) ?
                     StatusCode(201) : BadRequest(ModelState);
         
         [HttpPost("login")]

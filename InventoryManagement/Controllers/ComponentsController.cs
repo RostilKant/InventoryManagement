@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Entities.DataTransferObjects.Component;
 using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]

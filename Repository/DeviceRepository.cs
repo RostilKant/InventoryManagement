@@ -41,7 +41,6 @@ namespace Repository
                 .SingleOrDefaultAsync();
 
         public void UpdateDevice(Device device) => Update(device);
-
         public void CreateDevice(Device device) => Create(device);
         public void DeleteDevice(Device device) => Delete(device);
 

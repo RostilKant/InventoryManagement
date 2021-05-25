@@ -1,0 +1,396 @@
+@startuml
+class ApplicationContext {
+}
+"IdentityDbContext`3" "<User,IdentityRole<Guid>,Guid>" <|-- ApplicationContext
+class MappingProfile {
+}
+Profile <|-- MappingProfile
+class Program <<static>> {
+}
+class Startup {
+}
+class AccessoryRepository {
+}
+"RepositoryBase`1" "<Accessory>" <|-- AccessoryRepository
+IAccessoryRepository <|-- AccessoryRepository
+class ComponentRepository {
+}
+"RepositoryBase`1" "<Component>" <|-- ComponentRepository
+IComponentRepository <|-- ComponentRepository
+class ConsumableRepository {
+}
+"RepositoryBase`1" "<Consumable>" <|-- ConsumableRepository
+IConsumableRepository <|-- ConsumableRepository
+class DeviceRepository {
+}
+"RepositoryBase`1" "<Device>" <|-- DeviceRepository
+IDeviceRepository <|-- DeviceRepository
+class EmployeeRepository {
+}
+"RepositoryBase`1" "<Employee>" <|-- EmployeeRepository
+IEmployeeRepository <|-- EmployeeRepository
+class LicenseRepository {
+}
+"RepositoryBase`1" "<License>" <|-- LicenseRepository
+ILicenseRepository <|-- LicenseRepository
+abstract class "RepositoryBase`1"<T> {
+}
+"IRepositoryBase`1" "<T>" <|-- "RepositoryBase`1"
+class RepositoryManager {
+}
+IRepositoryManager <|-- RepositoryManager
+class AccessoryService {
+}
+IAccessoryService <|-- AccessoryService
+class AuthenticationService {
+}
+IAuthenticationService <|-- AuthenticationService
+class ComponentService {
+}
+IComponentService <|-- ComponentService
+class ConsumableService {
+}
+IConsumableService <|-- ConsumableService
+class DeviceService {
+}
+IDeviceService <|-- DeviceService
+class EmployeeService {
+}
+IEmployeeService <|-- EmployeeService
+class LicenseService {
+}
+ILicenseService <|-- LicenseService
+class UserService {
+}
+IUserService <|-- UserService
+class DeviceConfiguration {
+}
+"IEntityTypeConfiguration`1" "<Device>" <|-- DeviceConfiguration
+class EmployeeConfiguration {
+}
+"IEntityTypeConfiguration`1" "<Employee>" <|-- EmployeeConfiguration
+class RoleConfiguration {
+}
+"IEntityTypeConfiguration`1" "<IdentityRole<Guid>>" <|-- RoleConfiguration
+class AssetForAssignDto {
+}
+enum AccessoryCategory {
+    Monitors= 1,
+    Mousses= 2,
+    Keyboards= 3,
+    Webcams= 4,
+    Routers= 5,
+}
+enum AssetAssignType {
+    Removing= 1,
+    Adding= 2,
+}
+enum AssetStatus {
+    Archived= 1,
+    Deployable= 2,
+    UnDeployable= 3,
+    Pending= 4,
+    Active= 5,
+}
+enum ComponentCategory {
+    CPU= 1,
+    RAM= 2,
+    SSD= 3,
+    HDD= 4,
+    GPU= 5,
+}
+enum ConsumableCategory {
+    Printer_Paper= 1,
+    Printer_Ink= 2,
+    Monitor_Napkins= 3,
+}
+enum DeviceCategory {
+    Desktops= 1,
+    Laptops= 2,
+    Servers= 3,
+    Phones= 4,
+    Printers= 5,
+    Faxes= 6,
+    Routers= 7,
+    CoffeeMachines= 8,
+}
+enum EmployeeDepartment {
+    Software_Development= 1,
+    QA= 2,
+    Marketing= 3,
+    Hardware_Development= 4,
+    Client_Services= 5,
+}
+enum LicenseCategory {
+    Graphics_Software= 1,
+    Office_Software= 2,
+    IDE= 3,
+    VPN= 4,
+    Cloud_Software= 5,
+}
+class User {
+}
+"IdentityUser`1" "<Guid>" <|-- User
+class Accessory {
+}
+class Component {
+}
+class Consumable {
+}
+class License {
+}
+class Metadata {
+}
+class "PagedList`1"<T> {
+}
+"List`1" "<T>" <|-- "PagedList`1"
+abstract class RequestParameters {
+}
+class EmployeeParameters {
+}
+class DeviceParameters {
+}
+class AccessoryParameters {
+}
+class ConsumableParameters {
+}
+class ComponentParameters {
+}
+class LicenseParameters {
+}
+RequestParameters <|-- EmployeeParameters
+RequestParameters <|-- DeviceParameters
+RequestParameters <|-- AccessoryParameters
+RequestParameters <|-- ConsumableParameters
+RequestParameters <|-- ComponentParameters
+RequestParameters <|-- LicenseParameters
+class ValidationFilterAttribute {
+}
+IActionFilter <|-- ValidationFilterAttribute
+class AccessoriesController {
+}
+ControllerBase <|-- AccessoriesController
+class ComponentsController {
+}
+ControllerBase <|-- ComponentsController
+class ConsumablesController {
+}
+ControllerBase <|-- ConsumablesController
+class DevicesController {
+}
+ControllerBase <|-- DevicesController
+class EmployeesController {
+}
+ControllerBase <|-- EmployeesController
+class LicensesController {
+}
+ControllerBase <|-- LicensesController
+class UsersController {
+}
+ControllerBase <|-- UsersController
+class ExceptionMiddlewareExtensions <<static>> {
+}
+class ServiceExtensions <<static>> {
+}
+class InitialCreate <<partial>> {
+}
+Migration <|-- InitialCreate
+class InitialCreate <<partial>> {
+}
+class DbSeed1 <<partial>> {
+}
+Migration <|-- DbSeed1
+class DbSeed1 <<partial>> {
+}
+class ConvertEnumsToStrings <<partial>> {
+}
+Migration <|-- ConvertEnumsToStrings
+class ConvertEnumsToStrings <<partial>> {
+}
+class UpdateConsumableEntity <<partial>> {
+}
+Migration <|-- UpdateConsumableEntity
+class UpdateConsumableEntity <<partial>> {
+}
+class UpdateConsumableEnumCategoryToString <<partial>> {
+}
+Migration <|-- UpdateConsumableEnumCategoryToString
+class UpdateConsumableEnumCategoryToString <<partial>> {
+}
+class AddIdentity <<partial>> {
+}
+Migration <|-- AddIdentity
+class AddIdentity <<partial>> {
+}
+class ApplicationContextModelSnapshot <<partial>> {
+}
+ModelSnapshot <|-- ApplicationContextModelSnapshot
+interface IAccessoryRepository {
+    GetAllAccessoriesAsync(userId:Guid, accessoryParameters:AccessoryParameters) : Task<PagedList<Accessory>>
+    GetAccessoryAsync(userId:Guid, id:Guid, trackChanges:bool) : Task<Accessory>
+    UpdateAccessory(accessory:Accessory) : void
+    CreateAccessory(accessory:Accessory) : void
+    DeleteAccessory(accessory:Accessory) : void
+}
+"IRepositoryBase`1" "<Accessory>" <|-- IAccessoryRepository
+interface IComponentRepository {
+    GetAllComponentsAsync(userId:Guid, componentParameters:ComponentParameters) : Task<PagedList<Component>>
+    GetComponentAsync(userId:Guid, id:Guid, trackChanges:bool) : Task<Component>
+    UpdateComponent(component:Component) : void
+    CreateComponent(component:Component) : void
+    DeleteComponent(component:Component) : void
+}
+"IRepositoryBase`1" "<Component>" <|-- IComponentRepository
+interface IConsumableRepository {
+    GetAllConsumablesAsync(userId:Guid, consumableParameters:ConsumableParameters) : Task<PagedList<Consumable>>
+    GetConsumableAsync(userId:Guid, id:Guid, trackChanges:bool) : Task<Consumable>
+    UpdateConsumable(consumable:Consumable) : void
+    CreateConsumable(consumable:Consumable) : void
+    DeleteConsumable(consumable:Consumable) : void
+}
+"IRepositoryBase`1" "<Consumable>" <|-- IConsumableRepository
+interface IDeviceRepository {
+    GetAllDevicesAsync(userId:Guid, deviceParameters:DeviceParameters) : Task<PagedList<Device>>
+    GetDeviceAsync(userId:Guid, id:Guid, trackChanges:bool) : Task<Device>
+    UpdateDevice(device:Device) : void
+    CreateDevice(device:Device) : void
+    DeleteDevice(device:Device) : void
+    GetAllEmployeeDevicesAsync(employeeId:Guid) : Task<IEnumerable<Device>>
+}
+"IRepositoryBase`1" "<Device>" <|-- IDeviceRepository
+interface IEmployeeRepository {
+    GetAllEmployees(userId:Guid, employeeParameters:EmployeeParameters) : Task<PagedList<Employee>>
+    GetEmployeeAsync(userId:Guid, id:Guid, trackChanges:bool) : Task<Employee>
+    UpdateEmployee(employee:Employee) : void
+    CreateEmployee(employee:Employee) : void
+    DeleteEmployee(employee:Employee) : void
+}
+"IRepositoryBase`1" "<Employee>" <|-- IEmployeeRepository
+interface ILicenseRepository {
+    GetAllLicensesAsync(userId:Guid, licenseParameters:LicenseParameters) : Task<PagedList<License>>
+    GetLicenseAsync(userId:Guid, id:Guid, trackChanges:bool) : Task<License>
+    UpdateLicense(license:License) : void
+    CreateLicense(license:License) : void
+    DeleteLicense(license:License) : void
+}
+"IRepositoryBase`1" "<License>" <|-- ILicenseRepository
+interface "IRepositoryBase`1"<T> {
+    FindAll() : IQueryable<T>
+    FindByCondition(expression:Expression<Func<T, bool>>, trackChanges:bool) : IQueryable<T>
+    Create(entity:T) : void
+    CreateRange(entities:IEnumerable<T>) : void
+    Update(entity:T) : void
+    Delete(entity:T) : void
+    DeleteRange(entities:IEnumerable<T>) : void
+}
+interface IRepositoryManager {
+    Employee : IEmployeeRepository <<get>>
+    Device : IDeviceRepository <<get>>
+    Accessory : IAccessoryRepository <<get>>
+    Component : IComponentRepository <<get>>
+    Consumable : IConsumableRepository <<get>>
+    License : ILicenseRepository <<get>>
+    SaveAsync() : Task
+}
+class AccessoryRepositoryExtensions <<static>> {
+}
+class CommonExtensions <<static>> {
+}
+class ComponentRepositoryExtensions <<static>> {
+}
+class ConsumableRepositoryExtensions <<static>> {
+}
+class DeviceRepositoryExtensions <<static>> {
+}
+class EmployeeRepositoryExtensions <<static>> {
+}
+class LicenseRepositoryExtensions <<static>> {
+}
+interface IAccessoryService {
+}
+interface IAuthenticationService {
+    RegisterUserAsync(userForRegistration:UserForRegistrationDto, modelState:ModelStateDictionary) : Task<bool>
+    AuthenticateUserAsync(userForAuthentication:UserForAuthenticationDto) : Task<bool>
+    CreateTokenAsync() : Task<string>
+}
+interface IComponentService {
+}
+interface IConsumableService {
+}
+interface IDeviceService {
+}
+interface IEmployeeService {
+}
+interface ILicenseService {
+}
+interface IUserService {
+}
+class CommonExtensions <<static>> {
+}
+class UserServiceExtension <<static>> {
+}
+class AccessoryDto {
+}
+class AccessoryForCreationDto {
+}
+AccessoryForManipulationDto <|-- AccessoryForCreationDto
+abstract class AccessoryForManipulationDto {
+}
+class AccessoryForUpdateDto {
+}
+AccessoryForManipulationDto <|-- AccessoryForUpdateDto
+class ComponentDto {
+}
+class ComponentForCreationDto {
+}
+ComponentForManipulationDto <|-- ComponentForCreationDto
+abstract class ComponentForManipulationDto {
+}
+class ComponentForUpdateDto {
+}
+ComponentForManipulationDto <|-- ComponentForUpdateDto
+class ConsumableDto {
+}
+class ConsumableForCreationDto {
+}
+ConsumableForManipulationDto <|-- ConsumableForCreationDto
+abstract class ConsumableForManipulationDto {
+}
+class ConsumableForUpdateDto {
+}
+ConsumableForManipulationDto <|-- ConsumableForUpdateDto
+class DeviceDto {
+}
+class DeviceForCreationDto {
+}
+DeviceForManipulationDto <|-- DeviceForCreationDto
+abstract class DeviceForManipulationDto {
+}
+class DeviceForUpdateDto {
+}
+DeviceForManipulationDto <|-- DeviceForUpdateDto
+class EmployeeDto {
+}
+class EmployeeForCreationDto {
+}
+EmployeeForManipulationDto <|-- EmployeeForCreationDto
+abstract class EmployeeForManipulationDto {
+}
+class EmployeeForUpdateDto {
+}
+EmployeeForManipulationDto <|-- EmployeeForUpdateDto
+class LicenseDto {
+}
+class LicenseForCreationDto {
+}
+LicenseForManipulationDto <|-- LicenseForCreationDto
+abstract class LicenseForManipulationDto {
+}
+class LicenseForUpdateDto {
+}
+LicenseForManipulationDto <|-- LicenseForUpdateDto
+class UserForAuthenticationDto {
+}
+class UserForRegistrationDto {
+}
+@enduml
