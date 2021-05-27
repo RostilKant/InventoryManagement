@@ -13,6 +13,7 @@ namespace InventoryManagement
                 .Enrich.FromLogContext()  
                 .WriteTo.Console()
                 .WriteTo.Seq("http://localhost:5341/")
+                .WriteTo.File("./bin/Debug/net5.0/log/log.txt", rollingInterval: RollingInterval.Day)
                 .MinimumLevel.Debug()
                 .CreateLogger();  
             

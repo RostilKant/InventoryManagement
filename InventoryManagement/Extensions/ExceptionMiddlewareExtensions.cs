@@ -26,7 +26,8 @@ namespace InventoryManagement.Extensions
 
                         await context.Response.WriteAsync(new GlobalError
                         {
-                            StatusCode = context.Response.StatusCode
+                            StatusCode = context.Response.StatusCode,
+                            Message = error.Message
                         }.ToString());
                     }
                 }));

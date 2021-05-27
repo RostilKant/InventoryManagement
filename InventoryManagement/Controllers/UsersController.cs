@@ -31,5 +31,12 @@ namespace InventoryManagement.Controllers
             
             return Ok(new { Token = await _authenticationService.CreateTokenAsync() });
         }
+        
+        [HttpGet]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> GetOk()
+        {
+            return Ok("Ok");
+        }
     }
 }

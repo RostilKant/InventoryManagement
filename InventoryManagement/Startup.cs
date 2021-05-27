@@ -62,9 +62,10 @@ namespace InventoryManagement
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c =>
+                app.UseSwaggerUI(config =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "InventoryManagement v1");
+                    config.SwaggerEndpoint("/swagger/v1/swagger.json", "InventoryManagement v1");
+                    config.RoutePrefix = string.Empty;
                 });
             }
             else
