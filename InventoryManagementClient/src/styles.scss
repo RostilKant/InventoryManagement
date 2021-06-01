@@ -1,0 +1,25 @@
+@use "~@angular/material" as mat;
+@include mat.core();
+
+$primary: mat.define-palette(mat.$blue-gray-palette);
+$accent: mat.define-palette(mat.$amber-palette, 600);
+$warn: mat.define-palette(mat.$red-palette);
+
+$my-light-theme: mat.define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn
+  )
+));
+
+@include mat.all-component-themes($my-light-theme);
+
+//-------------------------------------------------------------------------------------------
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.link:focus {
+  outline: 0 !important;
+}

@@ -1,0 +1,18 @@
+<mat-toolbar color="primary">
+  <span [routerLink]="['/']">Assets Management</span>
+  <div class="flex-spacer"></div>
+  <button mat-button [routerLink]="['/employees']">Employees</button>
+  <button mat-button>Licenses</button>
+  <button mat-button>Devices</button>
+  <button mat-button>Accessories</button>
+  <button mat-button>Components</button>
+  <button mat-button>Consumables</button>
+  <div class="flex-spacer"></div>
+  <button mat-icon-button>
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <button mat-icon-button [routerLink]="['/auth', 'login']">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+<router-outlet></router-outlet>
