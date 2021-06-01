@@ -62,12 +62,12 @@ namespace Services
                 userForAuthentication.Password));
         }
 
-        public async Task<string> CreateTokenAsync()
+        public async Task<(string, DateTime)> CreateTokenAsync()
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims();
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            return (new JwtSecurityTokenHandler().WriteToken(tokenOptions), tokenOptions.ValidTo);
         }
 
         private static SigningCredentials GetSigningCredentials()

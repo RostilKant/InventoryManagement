@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Entities.DataTransferObjects.User;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -8,6 +9,6 @@ namespace Services.Contracts
     {
         Task<bool> RegisterUserAsync(UserForRegistrationDto userForRegistration, ModelStateDictionary modelState);
         Task<bool> AuthenticateUserAsync(UserForAuthenticationDto userForAuthentication);
-        Task<string> CreateTokenAsync();
+        Task<(string, DateTime)> CreateTokenAsync();
     }
 }

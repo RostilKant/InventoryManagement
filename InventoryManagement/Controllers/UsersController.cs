@@ -29,14 +29,8 @@ namespace InventoryManagement.Controllers
             if (!await _authenticationService.AuthenticateUserAsync(user))
                 return Unauthorized();
             
-            return Ok(new { Token = await _authenticationService.CreateTokenAsync() });
-        }
-        
-        [HttpGet]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> GetOk()
-        {
-            return Ok("Ok");
+            var (token, exp) = await _authenticationService.CreateTokenAsync();
+            return Ok(new {token, exp });
         }
     }
 }
