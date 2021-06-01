@@ -1,0 +1,52 @@
+<div class="background">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+    <h2>Sign in</h2>
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your email"
+        formControlName="email"
+        id="email"
+      >
+      <mat-error
+        *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
+      >
+        {{ getErrorMessage('Email') }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field
+      color="primary"
+      appearance="standard"
+    >
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your password"
+        type="password"
+        formControlName="password"
+        id="password"
+      >
+      <mat-error
+        *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
+      >
+        {{ getErrorMessage('Password') }}
+      </mat-error>
+    </mat-form-field>
+    <button
+      mat-flat-button
+      color="accent"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Login
+    </button>
+    <span>Doesn't have account? <a [routerLink]="['/auth', 'register']">Register</a></span>
+  </form>
+
+</div>
