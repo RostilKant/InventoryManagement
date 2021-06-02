@@ -50,7 +50,7 @@ namespace Services
 
                 return false;
             }
-
+            
             await _userManager.AddToRoleAsync(user, userForRegistration.Role ?? "User");
             return true;
         }
