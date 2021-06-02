@@ -4,6 +4,11 @@
     (ngSubmit)="submit()"
   >
     <h2>Sign in</h2>
+    <mat-card
+      class="danger"
+      *ngIf="error$ | async as error" >
+      {{error}}
+    </mat-card>
     <mat-form-field
       color="primary"
     >
@@ -42,7 +47,7 @@
       mat-flat-button
       color="accent"
       type="submit"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || submitted"
     >
       Login
     </button>

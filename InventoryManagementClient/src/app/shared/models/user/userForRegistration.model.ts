@@ -1,4 +1,4 @@
-export interface userForRegistrationModel {
+export interface UserForRegistrationModel {
   firstName: string,
   lastName: string,
   companyName: string,

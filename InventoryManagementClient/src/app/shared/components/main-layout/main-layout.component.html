@@ -11,7 +11,11 @@
   <button mat-icon-button>
     <mat-icon>account_circle</mat-icon>
   </button>
-  <button mat-icon-button [routerLink]="['/auth', 'login']">
+  <button
+    mat-icon-button
+    [routerLink]="['/auth', 'login']"
+    (click)="logout()"
+  >
     <mat-icon>logout</mat-icon>
   </button>
 </mat-toolbar>
