@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,9 @@ namespace InventoryManagement.ActionFilters
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
             
-            var param = context.ActionArguments
-                .SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
+            var param = context.ActionArguments;
             
-            if (param.Equals(null))
+            if (param == null)
             {
                 _logger.LogError("Object sent from client is null. Controller: {Controller}, action: {Action}", controller, action);
                 context.Result = new BadRequestObjectResult($"Object is null. Controller: {controller}, action: {action}");

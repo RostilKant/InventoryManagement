@@ -46,9 +46,9 @@ namespace InventoryManagement.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> PostEmployee([FromBody] EmployeeForCreationDto employeeForCreation)
+        public async Task<IActionResult> PostEmployee([FromBody] EmployeeForCreationDto employeeForCreationDto)
         {
-            var employeeDto = await _employeeService.CreateAsync(employeeForCreation);
+            var employeeDto = await _employeeService.CreateAsync(employeeForCreationDto);
             return CreatedAtAction("GetEmployee", new {id = employeeDto.Id}, employeeDto);
         }
 
@@ -61,9 +61,9 @@ namespace InventoryManagement.Controllers
 
         [HttpPut("{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> PutEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdate)
+        public async Task<IActionResult> PutEmployee(Guid id, [FromBody] EmployeeForUpdateDto employeeForUpdateDto)
         {
-            var employee = await _employeeService.UpdateAsync(id, employeeForUpdate);
+            var employee = await _employeeService.UpdateAsync(id, employeeForUpdateDto);
             return employee ? NoContent() : NotFound();
         }
 
@@ -83,13 +83,13 @@ namespace InventoryManagement.Controllers
 
         [HttpPut("{id:guid}/devices/manipulate")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> ManipulateEmployeeDevice(Guid id, [FromQuery] AssetForAssignDto assetForAssign)
-            => await _employeeService.ManipulateDeviceAsync(id, assetForAssign) ? NoContent() : NotFound();
+        public async Task<IActionResult> ManipulateEmployeeDevice(Guid id, [FromQuery] AssetForAssignDto assetForAssignDto)
+            => await _employeeService.ManipulateDeviceAsync(id, assetForAssignDto) ? NoContent() : NotFound();
 
         [HttpPut("{id:guid}/licenses/manipulate")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> ManipulateEmployeeLicense(Guid id,
-            [FromQuery] AssetForAssignDto assetForAssign)
-            => await _employeeService.ManipulateLicenseAsync(id, assetForAssign) ? NoContent() : NotFound();
+            [FromQuery] AssetForAssignDto assetForAssignDto)
+            => await _employeeService.ManipulateLicenseAsync(id, assetForAssignDto) ? NoContent() : NotFound();
     }
 }
