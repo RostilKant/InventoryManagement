@@ -29,12 +29,13 @@
       <mat-error
         *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
       >
-        {{ getErrorMessage('Email') }}
+        {{ errorMessage('email') }}
       </mat-error>
     </mat-form-field>
     <mat-form-field
       color="primary"
       appearance="standard"
+      class="password"
     >
       <mat-label>Password</mat-label>
       <input
@@ -47,16 +48,17 @@
       <mat-error
         *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
       >
-        {{ getErrorMessage('Password') }}
+        {{ errorMessage('password') }}
       </mat-error>
     </mat-form-field>
+
     <button
       mat-flat-button
       color="accent"
       type="submit"
       [disabled]="form.invalid || submitted"
     >
-      Login
+      Sign in
     </button>
     <span>Doesn't have account? <a [routerLink]="['/auth', 'register']">Register</a></span>
   </form>

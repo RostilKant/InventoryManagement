@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {MainLayoutComponent} from "./shared/components/main-layout/main-layout.component";
 import {DashboardPageComponent} from "./dashboard-page/dashboard-page.component";
-import {AuthGuard} from "./shared/servives/auth.guard";
+import {AuthGuard} from "./shared/serviсes/auth.guard";
 
 const routes: Routes = [
   {

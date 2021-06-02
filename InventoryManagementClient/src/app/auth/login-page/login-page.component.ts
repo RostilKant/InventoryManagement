@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../shared/servives/auth.service";
+import {AuthService} from "../../shared/serviсes/auth.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {UserForAuthenticationModel} from "../../shared/models/user/userForAuthentication.model";
 import {Subject} from "rxjs";
+import {CommonComponent} from "../../shared/components/common.component";
 
 @Component({
   selector: 'app-login-page',
@@ -40,21 +41,7 @@ export class LoginPageComponent implements OnInit {
 
   }
 
-  getErrorMessage(control: string): string {
-    if (this.form.get(control.toLocaleLowerCase())?.errors?.required) {
-      return `${control} is required`
-    }
-
-    if (this.form.get(control.toLocaleLowerCase())?.errors?.minlength) {
-      return `${control} must contain at least
-      ${this.form.get('password')?.errors?.minlength.requiredLength} symbols`
-    }
-
-    if (this.form.get(control.toLocaleLowerCase())?.errors?.email) {
-      return `${control} is invalid`
-    }
-    return ''
-  }
+  errorMessage = (control: string) => CommonComponent.getErrorMessage(this.form, control)
 
   submit() {
     if (this.form.invalid)

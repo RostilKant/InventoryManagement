@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {HttpClientModule} from "@angular/common/http";
 import {CommonModule} from "@angular/common";
-import {AuthService} from "./servives/auth.service";
+import {AuthService} from "./serviсes/auth.service";
 
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -10,7 +10,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
-import {AuthGuard} from "./servives/auth.guard";
+import {AuthGuard} from "./serviсes/auth.guard";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import {AuthGuard} from "./servives/auth.guard";
     MatIconModule,
     MatButtonModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatSnackBarModule
   ],
   exports: [
     HttpClientModule,
@@ -38,7 +40,8 @@ import {AuthGuard} from "./servives/auth.guard";
     MatIconModule,
     MatButtonModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatSnackBarModule
   ],
   providers: [
     AuthService,

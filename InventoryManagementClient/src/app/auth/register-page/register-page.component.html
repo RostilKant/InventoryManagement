@@ -1,1 +1,143 @@
-<p>register-page works!</p>
+<div class="background">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+    <h2>Registration</h2>
+
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>First name</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your first name"
+        formControlName="firstName"
+        id="firstName"
+      >
+      <mat-error
+        *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid"
+      >
+        {{ errorMessage('first', 'Name') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>Last name</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your last name"
+        formControlName="lastName"
+        id="lastName"
+      >
+      <mat-error
+        *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
+      >
+        {{ errorMessage('last', 'Name') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>User name</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your user name"
+        formControlName="userName"
+        id="userName"
+      >
+      <mat-error
+        *ngIf="form.get('userName')?.touched && form.get('userName')?.invalid"
+      >
+        {{ errorMessage('user', 'Name') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>Company name</mat-label>
+      <input
+        matInput
+        placeholder="Please, input company name"
+        formControlName="companyName"
+        id="companyName"
+      >
+      <mat-error
+        *ngIf="form.get('companyName')?.touched && form.get('companyName')?.invalid"
+      >
+        {{ errorMessage('company', 'Name') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your email"
+        formControlName="email"
+        id="email"
+      >
+      <mat-error
+        *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
+      >
+        {{ errorMessage('email') }}
+      </mat-error>
+
+    </mat-form-field>
+
+    <mat-form-field
+      color="primary"
+    >
+      <mat-label>Phone number</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your phone number"
+        formControlName="phoneNumber"
+        id="phoneNumber"
+      >
+      <mat-error
+        *ngIf="form.get('phoneNumber')?.touched && form.get('phoneNumber')?.invalid"
+      >
+        {{ errorMessage('phone', 'Number') }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field
+      color="primary"
+      appearance="standard"
+      class="password"
+    >
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        placeholder="Please, input your password"
+        type="password"
+        formControlName="password"
+        id="password"
+      >
+      <mat-error
+        *ngIf="form.get('password')?.touched && form.get('password')?.invalid"
+      >
+        {{ errorMessage('password') }}
+      </mat-error>
+      <mat-hint>At least 1 upper- & lowercase, special character, 1 number</mat-hint>
+    </mat-form-field>
+
+
+    <button
+      mat-flat-button
+      color="accent"
+      type="submit"
+      [disabled]="form.invalid || submitted"
+    >
+      Sign up
+    </button>
+  </form>
+
+</div>
