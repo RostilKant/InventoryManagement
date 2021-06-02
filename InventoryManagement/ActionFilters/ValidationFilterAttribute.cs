@@ -20,7 +20,8 @@ namespace InventoryManagement.ActionFilters
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
             
-            var param = context.ActionArguments;
+            var param = context.ActionArguments
+                .SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
             
             if (param == null)
             {
