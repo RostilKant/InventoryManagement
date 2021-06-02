@@ -16,13 +16,16 @@ export class AuthService {
   }
 
   get token(): string | null {
+    if (localStorage.getItem('jwt-token-exp') == null)
+      return null
+
     const expiresDate: Date = new Date(localStorage.getItem('jwt-token-exp') as string)
 
     if (new Date() > expiresDate){
       this.logout()
-      return null
+      return 'expires'
     }
-    return localStorage.getItem('jwt-token') as string
+    return localStorage.getItem('jwt-token')
   }
 
   login(user: UserForAuthenticationModel): Observable<TokenModel> {

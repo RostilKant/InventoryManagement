@@ -9,6 +9,13 @@
       *ngIf="error$ | async as error" >
       {{error}}
     </mat-card>
+
+    <mat-card
+      class="info"
+      *ngIf="guardMessage" >
+      {{guardMessage}}
+    </mat-card>
+
     <mat-form-field
       color="primary"
     >

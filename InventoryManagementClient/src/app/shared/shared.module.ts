@@ -10,6 +10,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
+import {AuthGuard} from "./servives/auth.guard";
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import {MatCardModule} from "@angular/material/card";
     MatCardModule
   ],
   providers: [
-    AuthService
+    AuthService,
+    AuthGuard
   ]
 })
 export class SharedModule {
