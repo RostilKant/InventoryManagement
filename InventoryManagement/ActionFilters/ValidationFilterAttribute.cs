@@ -23,12 +23,12 @@ namespace InventoryManagement.ActionFilters
             var param = context.ActionArguments
                 .SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
             
-            if (param == null)
+            /*if (param == null)
             {
                 _logger.LogError("Object sent from client is null. Controller: {Controller}, action: {Action}", controller, action);
                 context.Result = new BadRequestObjectResult($"Object is null. Controller: {controller}, action: {action}");
                 return;
-            }
+            }*/
             
             if (!context.ModelState.IsValid)
             {
