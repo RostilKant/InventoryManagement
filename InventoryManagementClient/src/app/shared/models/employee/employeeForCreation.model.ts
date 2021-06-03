@@ -1,4 +1,4 @@
-export interface  EmployeeForCreationModel {
+export interface EmployeeForCreationModel {
   firstName: string,
   lastName: string,
   job: string,

@@ -1,8 +1,102 @@
-<p>employees-page works!</p>
+<ng-template  #loading>
+  <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+</ng-template>
+
+<mat-form-field
+  appearance="outline"
+  color="accent"
+  class="search-field"
+>
+  <mat-label>Search...</mat-label>
+  <label>
+    <input
+      matInput
+      placeholder="Find any employee"
+      (beforeinput)="makeSearchTerm($event)"
+      (keyup.enter)="search()"
+    >
+  </label>
+</mat-form-field>
+
 <button
   mat-flat-button
   color="accent"
+  class="button-right"
   [routerLink]="['/employees', 'create']"
 >
   Create new employee
 </button>
+
+<div class="table-box" *ngIf="!isLoading; else loading">
+  <table mat-table [dataSource]="employees">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let employee"> {{employee.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fullName">
+      <th mat-header-cell *matHeaderCellDef> Full name </th>
+      <td mat-cell *matCellDef="let employee"> {{employee.fullName | titlecase}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="job">
+      <th mat-header-cell *matHeaderCellDef> Job </th>
+      <td mat-cell *matCellDef="let employee"> {{employee.job}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="department">
+      <th mat-header-cell *matHeaderCellDef> Department </th>
+      <td mat-cell  *matCellDef="let employee"> {{employee.department}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="employmentDate">
+      <th mat-header-cell *matHeaderCellDef> Employment date </th>
+      <td mat-cell  *matCellDef="let employee">{{employee.employmentDate}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef> Address </th>
+      <td mat-cell  *matCellDef="let employee">{{employee.address}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef> Country </th>
+      <td mat-cell  *matCellDef="let employee">{{employee.country}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef> State </th>
+      <td mat-cell  *matCellDef="let employee">{{employee.state}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="city">
+      <th mat-header-cell *matHeaderCellDef> City </th>
+      <td mat-cell  *matCellDef="let employee">{{employee.city}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="zipCode">
+      <th mat-header-cell *matHeaderCellDef> Zip code </th>
+      <td mat-cell  *matCellDef="let employee">{{employee.zipCode}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let employee">
+        <button mat-flat-button color="accent" [routerLink]="['/employees', employee.id, 'edit']">Edit</button>
+        <button (click)="remove(employee.id)" class="danger" mat-flat-button color="accent">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+<mat-paginator
+  *ngIf="!isLoading"
+  [length]="employeesCount"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="paging($event)"
+>
+</mat-paginator>

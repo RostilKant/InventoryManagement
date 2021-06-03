@@ -14,6 +14,9 @@ import {AuthGuard} from "./serviсes/auth.guard";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {MatTableModule} from "@angular/material/table";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   imports: [
@@ -30,7 +33,9 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatCardModule,
     MatSnackBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     HttpClientModule,
@@ -47,7 +52,10 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatCardModule,
     MatSnackBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   ],
   providers: [
     AuthService,

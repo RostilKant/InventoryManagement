@@ -11,6 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     private auth: AuthService,
+    private router: Router
   ) {
   }
 
@@ -18,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (this.auth.isAuthenticated()) {
       req = req.clone({
         setHeaders: {
-          'Authorization': this.auth.token as string,
+          Authorization: this.auth.token as string,
           Accept: '*/*'
         }
       })
@@ -27,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
       .pipe(
         tap(() => {
           console.log('Intercept')
-        })/*,
+        }),
         catchError((error: HttpErrorResponse) => {
           console.log(error);
           if (error.status === 401) {
@@ -39,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
             });
           }
           return throwError(error);
-        })*/
+        })
       )
   }
 

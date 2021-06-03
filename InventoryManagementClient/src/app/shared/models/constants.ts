@@ -1,1 +1,1 @@
-export const host: string = 'http://assets-management.diploma/api'
+export const host: string = 'https://localhost:5001/api'
