@@ -1,0 +1,52 @@
+mat-progress-spinner {
+  margin: 15% auto;
+}
+
+.mat-table {
+  height: 100% !important;
+  width: 120%;
+}
+
+.button-right {
+  position: relative;
+  float: right;
+  margin-right: 5% !important;
+  margin-top: 3.5px;
+  width: 10rem;
+}
+
+.table-box {
+  display: block;
+  margin: 0.5% 5%;
+  overflow-x: auto !important;
+  border: lightslategray 1px solid;
+  border-radius: 5px;
+}
+
+.mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-row:hover .mat-cell {
+  border-color: lightslategray;
+}
+
+input:hover {
+  border-color: lightslategray !important;
+}
+
+.mat-flat-button {
+  margin-right: 5px;
+  padding: 0;
+}
+
+button.danger {
+  background-color: crimson;
+}
+
+.search-field {
+  margin-left: 5%;
+  padding: 0 !important;
+}
