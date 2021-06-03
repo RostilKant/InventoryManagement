@@ -24,7 +24,9 @@ const INTERCEPTOR_PROVIDER: Provider = {
     SharedModule,
     RouterModule.forChild([
       {path: '', component: EmployeesPageComponent, pathMatch: 'full'},
-      {path: 'create', component: CreateEmployeePageComponent}
+      {path: 'create', component: CreateEmployeePageComponent},
+      {path: ':id/edit', component: EditEmployeePageComponent}
+
     ])
   ],
   exports: [

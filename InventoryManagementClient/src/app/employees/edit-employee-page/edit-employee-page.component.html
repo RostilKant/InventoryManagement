@@ -1,1 +1,223 @@
-<p>edit-employee-page works!</p>
+<h2>Edit employee</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>First name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's first name"
+      formControlName="firstName"
+      id="firstName"
+    >
+    <mat-error
+      *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid"
+    >
+      {{ errorMessage('first', 'Name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Last name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's last name"
+      formControlName="lastName"
+      id="lastName"
+    >
+    <mat-error
+      *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid"
+    >
+      {{ errorMessage('last', 'Name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Job</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's job"
+      formControlName="job"
+      id="job"
+    >
+    <mat-error
+      *ngIf="form.get('job')?.touched && form.get('job')?.invalid"
+    >
+      {{ errorMessage('job') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Phone</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's phone"
+      formControlName="phone"
+      id="phone"
+    >
+    <mat-error
+      *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid"
+    >
+      {{ errorMessage('phone') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Department</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's department"
+      formControlName="department"
+      id="department"
+    >
+    <mat-error
+      *ngIf="form.get('department')?.touched && form.get('department')?.invalid"
+    >
+      {{ errorMessage('department') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Office address</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's office address"
+      formControlName="officeAddress"
+      id="officeAddress"
+    >
+    <mat-error
+      *ngIf="form.get('officeAddress')?.touched && form.get('officeAddress')?.invalid"
+    >
+      {{ errorMessage('office', 'Address') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Employment date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      formControlName="employmentDate"
+      id="employmentDate"
+    >
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error
+      *ngIf="form.get('employmentDate')?.touched && form.get('employmentDate')?.invalid"
+    >
+      {{ errorMessage('employment', 'Date') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Address</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's address"
+      formControlName="address"
+      id="address"
+    >
+    <mat-error
+      *ngIf="form.get('address')?.touched && form.get('address')?.invalid"
+    >
+      {{ errorMessage('address') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>City</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's city"
+      formControlName="city"
+      id="city"
+    >
+    <mat-error
+      *ngIf="form.get('city')?.touched && form.get('city')?.invalid"
+    >
+      {{ errorMessage('city') }}
+    </mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>State</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's state"
+      formControlName="state"
+      id="state"
+    >
+    <mat-error
+      *ngIf="form.get('state')?.touched && form.get('state')?.invalid"
+    >
+      {{ errorMessage('state') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Country</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's country"
+      formControlName="country"
+      id="country"
+    >
+    <mat-error
+      *ngIf="form.get('country')?.touched && form.get('country')?.invalid"
+    >
+      {{ errorMessage('country') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Zip code</mat-label>
+    <input
+      matInput
+      placeholder="Please, input employee's zip code"
+      formControlName="zipCode"
+      id="zipCode"
+    >
+    <mat-error
+      *ngIf="form.get('zipCode')?.touched && form.get('zipCode')?.invalid"
+    >
+      {{ errorMessage('zip', 'Code') }}
+    </mat-error>
+  </mat-form-field>
+
+  <button
+    mat-flat-button
+    color="accent"
+    type="submit"
+    [disabled]="form.invalid || submitted"
+  >
+    Update
+  </button>
+</form>
+
