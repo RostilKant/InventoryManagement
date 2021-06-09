@@ -54,6 +54,7 @@ namespace Repository.Extensions
                 x.Phone.ToLower().Contains(lowerTerm) ||
                 x.FirstName.ToLower().Contains(lowerTerm) ||
                 x.LastName.ToLower().Contains(lowerTerm) ||
+                $"{x.FirstName} {x.LastName}".ToLower().Contains(lowerTerm) ||
                 x.Id.Equals(id)
                 );
         }
@@ -65,10 +66,20 @@ namespace Repository.Extensions
 
             var orderParams = orderByQueryString.Trim().Split(',');
 
+            if (orderParams[0].Contains("fullName"))
+            {
+                var splitOrder = orderParams[0].Split(' ');
+                orderParams = new[]
+                {
+                    $"firstName {splitOrder[1]}",
+                    $"lastName {splitOrder[1]}"
+                };
+            }
+            
             var propertyInfos = typeof(Employee).GetProperties(BindingFlags.Public
                                                                | BindingFlags.Instance);
 
-            var orderquery = "";
+            var orderQuery = "";
 
             foreach (var param in orderParams)
             {
@@ -84,13 +95,13 @@ namespace Repository.Extensions
 
                 var sortOrder = param.EndsWith(" desc") ? "descending" : "ascending";
 
-                orderquery += $"{objProperty.Name} {sortOrder},";
+                orderQuery += $"{objProperty.Name} {sortOrder},";
             }
 
-            orderquery = orderquery.TrimEnd(',', ' ');
+            orderQuery = orderQuery.TrimEnd(',', ' ');
 
-            return string.IsNullOrWhiteSpace(orderquery) ? 
-                queryable.OrderBy(e => e.EmploymentDate) : queryable.OrderBy(orderquery);
+            return string.IsNullOrWhiteSpace(orderQuery) ? 
+                queryable.OrderBy(e => e.EmploymentDate) : queryable.OrderBy(orderQuery);
         }
     }
 }
