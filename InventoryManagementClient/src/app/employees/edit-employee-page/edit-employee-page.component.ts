@@ -8,6 +8,7 @@ import {Subscription} from "rxjs";
 import {switchMap} from "rxjs/operators";
 import {EmployeeModel} from "../../shared/models/employee/employee.model";
 import {HttpErrorResponse} from "@angular/common/http";
+import {EmployeeDepartment} from "../../shared/enums/employee-department.enum";
 
 @Component({
   selector: 'app-edit-employee-page',
@@ -20,6 +21,7 @@ export class EditEmployeePageComponent implements OnInit, OnDestroy {
   submitted: boolean = false
   currentEmployee: EmployeeModel | undefined
   currentEmployeeId: string = ''
+  employeeDepartments: string[] = []
   updateSub: Subscription = new Subscription()
 
   constructor(
@@ -28,6 +30,8 @@ export class EditEmployeePageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private employeeService: EmployeeService
   ) {
+    this.employeeDepartments = CommonComponent.getEnumNames(EmployeeDepartment)
+
     // noinspection DuplicatedCode
     this.form = this.fb.group({
       firstName: [null, [Validators.required]],
@@ -88,7 +92,7 @@ export class EditEmployeePageComponent implements OnInit, OnDestroy {
       lastName: this.form.value.lastName,
       job: this.form.value.job,
       phone: this.form.value.phone,
-      department: (this.form.value.department as string).split(' ').join('_'),
+      department: this.form.value.department,
       officeAddress: this.form.value.officeAddress,
       employmentDate: this.form.value.employmentDate,
       address: this.form.value.address,

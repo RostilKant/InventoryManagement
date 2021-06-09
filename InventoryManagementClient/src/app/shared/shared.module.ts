@@ -17,49 +17,43 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatTableModule} from "@angular/material/table";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { RemoveUnderscorePipe } from './pipes/remove-underscore.pipe';
+import {MatSelectModule} from "@angular/material/select";
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
   imports: [
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatButtonModule,
-    MatInputModule,
-    MatCardModule,
-    MatSnackBarModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatProgressSpinnerModule
   ],
-  exports: [
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
+    exports: [
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
 
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatIconModule,
-    MatButtonModule,
-    MatInputModule,
-    MatCardModule,
-    MatSnackBarModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule
-  ],
+        RemoveUnderscorePipe,
+
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatInputModule,
+        MatCardModule,
+        MatSnackBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTableModule,
+        MatProgressSpinnerModule,
+        MatPaginatorModule,
+        MatSelectModule,
+        MatSortModule
+    ],
   providers: [
     AuthService,
     AuthGuard
+  ],
+  declarations: [
+    RemoveUnderscorePipe
   ]
 })
 export class SharedModule {

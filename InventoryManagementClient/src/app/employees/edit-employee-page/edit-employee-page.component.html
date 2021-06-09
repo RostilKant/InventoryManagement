@@ -76,12 +76,13 @@
     color="primary"
   >
     <mat-label>Department</mat-label>
-    <input
-      matInput
-      placeholder="Please, input employee's department"
+    <mat-select
       formControlName="department"
-      id="department"
-    >
+      id="department">
+      <mat-option *ngFor="let department of employeeDepartments" [value]="department">
+        {{department | removeUnderscore}}
+      </mat-option>
+    </mat-select>
     <mat-error
       *ngIf="form.get('department')?.touched && form.get('department')?.invalid"
     >

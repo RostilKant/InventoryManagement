@@ -14,13 +14,14 @@ export class EmployeeService {
   ) {
   }
 
-  getAll(searchTerm: string = '', pageNumber: number = 1, pageSize: number = 10)
+  getAll(searchTerm: string = '', orderBy: string = '', pageNumber: number = 1, pageSize: number = 10)
     : Observable<EmployeeModel[]> {
     return this.http.get<EmployeeModel[]>(`${host}/employees`, {
       params: {
         pageNumber: pageNumber,
         pageSize: pageSize,
-        searchTerm: searchTerm
+        searchTerm: searchTerm,
+        orderBy: orderBy
       }
     })
   }

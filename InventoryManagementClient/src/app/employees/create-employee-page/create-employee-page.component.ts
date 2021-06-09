@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {CommonComponent} from "../../shared/components/common.component";
 import {EmployeeService} from "../employee.service";
 import {EmployeeForCreationModel} from "../../shared/models/employee/employeeForCreation.model";
+import {EmployeeDepartment} from "../../shared/enums/employee-department.enum";
 
 @Component({
   selector: 'app-create-employee-page',
@@ -14,12 +15,15 @@ export class CreateEmployeePageComponent implements OnInit {
 
   form: FormGroup
   submitted: boolean = false
+  employeeDepartments: string[] = []
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private employeeService: EmployeeService
   ) {
+    this.employeeDepartments = CommonComponent.getEnumNames(EmployeeDepartment)
+
     this.form = this.fb.group({
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
@@ -53,7 +57,7 @@ export class CreateEmployeePageComponent implements OnInit {
       lastName: this.form.value.lastName,
       job: this.form.value.job,
       phone: this.form.value.phone,
-      department: (this.form.value.department as string).split(' ').join('_'),
+      department: this.form.value.department,
       officeAddress: this.form.value.officeAddress,
       employmentDate: this.form.value.employmentDate,
       address: this.form.value.address,
