@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Net.Mime;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Entities.DataTransferObjects;
-using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.Employee;
-using Entities.Enums;
 using Entities.RequestFeatures;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
 using Services.Contracts;
 

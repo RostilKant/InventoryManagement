@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Entities.DataTransferObjects.Accessory;
 using Entities.DataTransferObjects.Component;
 using Entities.DataTransferObjects.Consumable;
+using Entities.Enums;
 
 namespace Entities.DataTransferObjects.Device
 {
@@ -20,7 +21,7 @@ namespace Entities.DataTransferObjects.Device
         public string Serial { get; set; }
 
         [Required(ErrorMessage = "Category is required field")]
-        public string Category { get; set; }
+        public DeviceCategory Category { get; set; }
 
         [Required(ErrorMessage = "Status is required field")]
         public string Status { get; set; }

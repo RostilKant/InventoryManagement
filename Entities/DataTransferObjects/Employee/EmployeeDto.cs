@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Entities.DataTransferObjects.Device;
 using Entities.DataTransferObjects.License;
+using Entities.Enums;
 
 namespace Entities.DataTransferObjects.Employee
 {
@@ -14,7 +15,7 @@ namespace Entities.DataTransferObjects.Employee
 
         public string Phone { get; set; }
         
-        public string Department { get; set; }
+        public EmployeeDepartment Department { get; set; }
         
         public string OfficeAddress { get; set; }
 

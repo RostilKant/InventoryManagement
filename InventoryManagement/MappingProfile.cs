@@ -16,9 +16,6 @@ namespace InventoryManagement
         public MappingProfile()
         {
             CreateMap<Employee, EmployeeDto>()
-                .ForMember(c => c.Department,
-                    options =>
-                        options.MapFrom(x => x.Department.ToString().Replace('_', ' ')))
                 .ForMember(c => c.FullName,
                     options =>
                         options.MapFrom(x => $"{x.FirstName} {x.LastName}"));
