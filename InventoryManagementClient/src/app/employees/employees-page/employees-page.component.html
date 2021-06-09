@@ -12,7 +12,7 @@
     <input
       matInput
       placeholder="Find any employee"
-      (beforeinput)="makeSearchTerm($event)"
+      [(ngModel)]="searchTerm"
       (keyup.enter)="search()"
     >
   </label>
@@ -28,55 +28,58 @@
 </button>
 
 <div class="table-box" *ngIf="!isLoading; else loading">
-  <table mat-table [dataSource]="employees">
+  <table mat-table [dataSource]="employees"
+         matSort
+         (matSortChange)="sortData($event)"
+  >
 
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
       <td mat-cell *matCellDef="let employee"> {{employee.id}} </td>
     </ng-container>
 
     <ng-container matColumnDef="fullName">
-      <th mat-header-cell *matHeaderCellDef> Full name </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Full name </th>
       <td mat-cell *matCellDef="let employee"> {{employee.fullName | titlecase}} </td>
     </ng-container>
 
     <ng-container matColumnDef="job">
-      <th mat-header-cell *matHeaderCellDef> Job </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Job </th>
       <td mat-cell *matCellDef="let employee"> {{employee.job}} </td>
     </ng-container>
 
     <ng-container matColumnDef="department">
-      <th mat-header-cell *matHeaderCellDef> Department </th>
-      <td mat-cell  *matCellDef="let employee"> {{employee.department}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Department </th>
+      <td mat-cell  *matCellDef="let employee"> {{employee.department | removeUnderscore}} </td>
     </ng-container>
 
     <ng-container matColumnDef="employmentDate">
-      <th mat-header-cell *matHeaderCellDef> Employment date </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Employment date </th>
       <td mat-cell  *matCellDef="let employee">{{employee.employmentDate}}</td>
     </ng-container>
 
     <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef> Address </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
       <td mat-cell  *matCellDef="let employee">{{employee.address}}</td>
     </ng-container>
 
     <ng-container matColumnDef="country">
-      <th mat-header-cell *matHeaderCellDef> Country </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
       <td mat-cell  *matCellDef="let employee">{{employee.country}}</td>
     </ng-container>
 
     <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef> State </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> State </th>
       <td mat-cell  *matCellDef="let employee">{{employee.state}}</td>
     </ng-container>
 
     <ng-container matColumnDef="city">
-      <th mat-header-cell *matHeaderCellDef> City </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
       <td mat-cell  *matCellDef="let employee">{{employee.city}}</td>
     </ng-container>
 
     <ng-container matColumnDef="zipCode">
-      <th mat-header-cell *matHeaderCellDef> Zip code </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Zip code </th>
       <td mat-cell  *matCellDef="let employee">{{employee.zipCode}}</td>
     </ng-container>
 

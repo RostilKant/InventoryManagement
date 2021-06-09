@@ -5,6 +5,7 @@ import {delay} from "rxjs/operators";
 import {Subscription} from "rxjs";
 import {PageEvent} from "@angular/material/paginator";
 import {Router} from "@angular/router";
+import {Sort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-employees-page',
@@ -19,6 +20,7 @@ export class EmployeesPageComponent implements OnInit {
   displayedColumns: string[] = ['fullName', 'job', 'department', 'employmentDate', 'address', 'country',
     'state', 'city', 'zipCode', 'actions']
   searchTerm: string = ''
+  orderBy: string = ''
   pageNumber: number = 1
   pageSize: number = 10
 
@@ -34,8 +36,8 @@ export class EmployeesPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true
-    this.getAllSub =  this.employeeService.getAll(this.searchTerm, this.pageNumber, this.pageSize)
-      .pipe(delay(1000))
+    this.getAllSub =  this.employeeService.getAll(this.searchTerm, this.orderBy, this.pageNumber, this.pageSize)
+      .pipe(delay(888))
       .subscribe((response: EmployeeModel[]) => {
         this.employees = response
         this.isLoading = false
@@ -45,7 +47,7 @@ export class EmployeesPageComponent implements OnInit {
           this.router.navigate(['/auth', 'login'])
         }
       })
-    this.employeeService.getAll('', 1,10000000)
+    this.employeeService.getAll(this.searchTerm, this.orderBy, 1,10000000)
       .subscribe((response : EmployeeModel[]) => {
         this.employeesCount = response.length
       })
@@ -75,18 +77,8 @@ export class EmployeesPageComponent implements OnInit {
       })
   }
 
-  makeSearchTerm($event: InputEvent) {
-    console.log($event)
-    if ($event.inputType != 'deleteContentBackward' && $event.data != null)
-      this.searchTerm += ($event.data)
-    else
-      this.searchTerm = this.searchTerm.slice(0,-1)
-
-    console.log(this.searchTerm)
-  }
-
   search() {
-    this.searchAllSub = this.employeeService.getAll(this.searchTerm, this.pageNumber, this.pageSize)
+    this.searchAllSub = this.employeeService.getAll(this.searchTerm, this.orderBy, this.pageNumber, this.pageSize)
       .subscribe((response) => {
         this.employees = response
         console.log(response)
@@ -98,11 +90,22 @@ export class EmployeesPageComponent implements OnInit {
   paging($event: PageEvent) {
     this.pageSize = $event.pageSize
     this.pageNumber = ++$event.pageIndex
-    this.paginateAllSub = this.employeeService.getAll(this.searchTerm,this.pageNumber, this.pageSize)
+    this.paginateAllSub = this.employeeService.getAll(this.searchTerm, this.orderBy, this.pageNumber, this.pageSize)
       .subscribe((response: EmployeeModel[]) => {
         this.employees = response
       })
   }
 
+  sortData($event: Sort) {
+    if ($event.active != null && $event.direction)
+      this.orderBy = `${$event.active} ${$event.direction}`
+    else
+      this.orderBy = ''
 
+    console.log(this.orderBy);
+    this.employeeService.getAll(this.searchTerm, this.orderBy, this.pageNumber, this.pageSize)
+      .subscribe((response: EmployeeModel[]) => {
+        this.employees = response
+      })
+  }
 }
