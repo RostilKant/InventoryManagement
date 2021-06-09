@@ -1,9 +1,11 @@
+import {EmployeeDepartment} from "../../enums/employee-department.enum";
+
 export interface EmployeeForEditingModel {
   firstName: string,
   lastName: string,
   job: string,
   phone: string,
-  department: string,
+  department: EmployeeDepartment,
   officeAddress: string,
   employmentDate: Date,
   address: string,
