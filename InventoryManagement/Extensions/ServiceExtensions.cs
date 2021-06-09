@@ -64,7 +64,7 @@ namespace InventoryManagement.Extensions
                 new()
                 {
                     Endpoint = "*",
-                    Limit = 10,
+                    Limit = 100,
                     Period = "1m"
                 }
             };
