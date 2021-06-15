@@ -1,5 +1,4 @@
 import {FormGroup} from "@angular/forms";
-import {EmployeeDepartment} from "../enums/employee-department.enum";
 
 export class CommonComponent {
   static getErrorMessage(form: FormGroup, ...controlNames: string[]): string {

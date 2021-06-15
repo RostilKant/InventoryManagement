@@ -1,1 +1,238 @@
-<p>edit-device-page works!</p>
+<h2>Edit device</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Model</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's model"
+      formControlName="model"
+      id="model"
+    >
+    <mat-error
+      *ngIf="form.get('model')?.touched && form.get('model')?.invalid"
+    >
+      {{ errorMessage('model') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Serial</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's serial"
+      formControlName="serial"
+      id="serial"
+    >
+    <mat-error
+      *ngIf="form.get('serial')?.touched && form.get('serial')?.invalid"
+    >
+      {{ errorMessage('serial') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Category</mat-label>
+    <mat-select
+      formControlName="category"
+      id="category">
+      <mat-option *ngFor="let category of deviceCategories" [value]="category">
+        {{category | removeUnderscore}}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="form.get('category')?.touched && form.get('category')?.invalid"
+    >
+      {{ errorMessage('category') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Status</mat-label>
+    <mat-select
+      formControlName="status"
+      id="status">
+      <mat-option *ngFor="let status of assetStatuses" [value]="status">
+        {{status | removeUnderscore}}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="form.get('status')?.touched && form.get('status')?.invalid"
+    >
+      {{ errorMessage('status') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Manufacturer</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's manufacturer"
+      formControlName="manufacturer"
+      id="manufacturer"
+    >
+    <mat-error
+      *ngIf="form.get('manufacturer')?.touched && form.get('manufacturer')?.invalid"
+    >
+      {{ errorMessage('manufacturer') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Office address</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's office address"
+      formControlName="officeAddress"
+      id="officeAddress"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Purchase cost</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's purchase cost"
+      formControlName="purchaseCost"
+      id="purchaseCost"
+    >
+    <mat-error
+      *ngIf="form.get('purchaseCost')?.touched && form.get('purchaseCost')?.invalid"
+    >
+      {{ errorMessage('purchase','cost') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Purchase date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="purchasePicker"
+      formControlName="purchaseDate"
+      id="purchaseDate"
+    >
+    <mat-datepicker-toggle matSuffix [for]="purchasePicker"></mat-datepicker-toggle>
+    <mat-datepicker #purchasePicker></mat-datepicker>
+    <mat-error
+      *ngIf="form.get('purchaseDate')?.touched && form.get('purchaseDate')?.invalid"
+    >
+      {{ errorMessage('purchase', 'Date') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Update cost</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's update cost"
+      formControlName="updateCost"
+      id="updateCost"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Update date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="updatePicker"
+      formControlName="lastUpdateDate"
+      id="lastUpdateDate"
+    >
+    <mat-datepicker-toggle matSuffix [for]="updatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #updatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Warranty</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's warranty"
+      formControlName="warranty"
+      id="warranty"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Warranty expires</mat-label>
+    <input
+      matInput
+      [matDatepicker]="warrantyPicker"
+      formControlName="warrantyExpires"
+      id="warrantyExpires"
+    >
+    <mat-datepicker-toggle matSuffix [for]="warrantyPicker"></mat-datepicker-toggle>
+    <mat-datepicker #warrantyPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Imei</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's imei"
+      formControlName="imei"
+      id="imei"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Mac address</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's mac address"
+      formControlName="macAddress"
+      id="macAddress"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Notes</mat-label>
+    <input
+      matInput
+      placeholder="Please, input device's notes"
+      formControlName="notes"
+      id="notes"
+    >
+  </mat-form-field>
+
+  <button
+    mat-flat-button
+    color="accent"
+    type="submit"
+    [disabled]="form.invalid || submitted"
+  >
+    Create
+  </button>
+</form>

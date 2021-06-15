@@ -11,7 +11,7 @@
   <label>
     <input
       matInput
-      placeholder="Find any devics"
+      placeholder="Find any devices"
       [(ngModel)]="searchTerm"
       (keyup.enter)="search()"
     >
@@ -141,7 +141,7 @@
 
     <ng-container matColumnDef="purchaseDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase date </th>
-      <td mat-cell *matCellDef="let device"> {{device.purchaseDate}} </td>
+      <td mat-cell *matCellDef="let device"> {{device.purchaseDate | date}} </td>
     </ng-container>
 
     <ng-container matColumnDef="updateCost">
@@ -151,7 +151,7 @@
 
     <ng-container matColumnDef="lastUpdateDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Update date </th>
-      <td mat-cell *matCellDef="let device"> {{device.lastUpdateDate}} </td>
+      <td mat-cell *matCellDef="let device"> {{device.lastUpdateDate | date}} </td>
     </ng-container>
 
     <ng-container matColumnDef="warranty">
@@ -161,7 +161,7 @@
 
     <ng-container matColumnDef="warrantyExpires">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Warranty expires </th>
-      <td mat-cell *matCellDef="let device"> {{device.serial}} </td>
+      <td mat-cell *matCellDef="let device"> {{device.warrantyExpires | date}} </td>
     </ng-container>
 
     <ng-container matColumnDef="imei">
@@ -181,9 +181,9 @@
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell *matCellDef="let employee">
-        <button mat-flat-button color="accent" [routerLink]="['/employees', employee.id, 'edit']">Edit</button>
-        <button (click)="remove(employee.id)" class="danger" mat-flat-button color="accent">Delete</button>
+      <td mat-cell *matCellDef="let device">
+        <button mat-flat-button color="accent" [routerLink]="['/devices', device.id, 'edit']">Edit</button>
+        <button (click)="remove(device.id)" class="danger" mat-flat-button color="accent">Delete</button>
       </td>
     </ng-container>
 

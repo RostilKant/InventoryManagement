@@ -32,7 +32,6 @@ export class EditEmployeePageComponent implements OnInit, OnDestroy {
   ) {
     this.employeeDepartments = CommonComponent.getEnumNames(EmployeeDepartment)
 
-    // noinspection DuplicatedCode
     this.form = this.fb.group({
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
