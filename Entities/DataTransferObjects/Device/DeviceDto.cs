@@ -35,15 +35,15 @@ namespace Entities.DataTransferObjects.Device
         public decimal PurchaseCost { get; set; }
         
         [Required(ErrorMessage = "PurchaseDate is required field")]
-        public DateTime PurchaseDate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
         
-        public decimal UpdateCost { get; set; }
+        public decimal? UpdateCost { get; set; }
         
-        public DateTime LastUpdateDate { get; set; }
+        public DateTime? LastUpdateDate { get; set; }
         
         public string Warranty { get; set; }
         
-        public DateTime WarrantyExpires { get; set; }
+        public DateTime? WarrantyExpires { get; set; }
         
         public string Imei{ get; set; }
         
