@@ -23,3 +23,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .link:focus {
   outline: 0 !important;
 }
+
+.mat-pseudo-checkbox {
+  display: none !important;
+}
+
+mat-chip-list {
+  display: flex !important;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.mat-list-wrapper {
+  display: flex !important;
+}
+
+.field-link {
+  text-decoration-color: darkblue;
+}

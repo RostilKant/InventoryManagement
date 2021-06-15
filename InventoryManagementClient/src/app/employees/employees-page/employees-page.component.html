@@ -1,4 +1,4 @@
-<ng-template  #loading>
+<ng-template #loading>
   <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
 </ng-template>
 
@@ -19,13 +19,44 @@
 </mat-form-field>
 
 <button
+  mat-icon-button
+  class="select-field"
+  (click)=select.open()>
+
+  <mat-icon class="field-icon">view_column</mat-icon>
+
+  <mat-select multiple #select class="disable-arrow">
+    <mat-option *ngFor="let column of defaultColumns;index as idx">
+      <mat-checkbox
+        *ngIf="idx != defaultColumns.length"
+        [checked]="ifExists(column)"
+        (change)="manipulateFields($event, idx)"
+      >
+        {{column | titlecase}}
+      </mat-checkbox>
+    </mat-option>
+  </mat-select>
+</button>
+
+<button
   mat-flat-button
   color="accent"
   class="button-right"
   [routerLink]="['/employees', 'create']"
 >
-  Create new employee
+  Create new
 </button>
+
+<mat-chip-list>
+  <mat-chip
+    *ngFor="let chip of filterByValue"
+    [removable]="removable"
+    (removed)="removeChip(chip)"
+  >
+    {{chip | removeUnderscore}}
+    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+  </mat-chip>
+</mat-chip-list>
 
 <div class="table-box" *ngIf="!isLoading; else loading">
   <table mat-table [dataSource]="employees"
@@ -34,65 +65,98 @@
   >
 
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id</th>
       <td mat-cell *matCellDef="let employee"> {{employee.id}} </td>
     </ng-container>
 
     <ng-container matColumnDef="fullName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Full name </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Full name</th>
       <td mat-cell *matCellDef="let employee"> {{employee.fullName | titlecase}} </td>
     </ng-container>
 
     <ng-container matColumnDef="job">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Job </th>
-      <td mat-cell *matCellDef="let employee"> {{employee.job}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Job</th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let employee"
+        (click)="filtering('job', employee.job)"
+      > {{employee.job}} </td>
     </ng-container>
 
     <ng-container matColumnDef="department">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Department </th>
-      <td mat-cell  *matCellDef="let employee"> {{employee.department | removeUnderscore}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Department</th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let employee"
+        (click)="filtering('department', employee.department)"
+      >
+        {{employee.department | removeUnderscore}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="employmentDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Employment date </th>
-      <td mat-cell  *matCellDef="let employee">{{employee.employmentDate}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Employment date</th>
+      <td mat-cell *matCellDef="let employee">{{employee.employmentDate}}</td>
     </ng-container>
 
     <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
-      <td mat-cell  *matCellDef="let employee">{{employee.address}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Address</th>
+      <td mat-cell *matCellDef="let employee">{{employee.address}}</td>
     </ng-container>
 
     <ng-container matColumnDef="country">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
-      <td mat-cell  *matCellDef="let employee">{{employee.country}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Country</th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let employee"
+        (click)="filtering('country', employee.country)"
+      >
+        {{employee.country}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> State </th>
-      <td mat-cell  *matCellDef="let employee">{{employee.state}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> State</th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let employee"
+        (click)="filtering('state', employee.state)"
+      >
+        {{employee.state}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="city">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
-      <td mat-cell  *matCellDef="let employee">{{employee.city}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> City</th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let employee"
+        (click)="filtering('city', employee.city)"
+      >
+        {{employee.city}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="zipCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Zip code </th>
-      <td mat-cell  *matCellDef="let employee">{{employee.zipCode}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Zip code</th>
+      <td mat-cell *matCellDef="let employee">{{employee.zipCode}}</td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <th mat-header-cell *matHeaderCellDef> Actions</th>
       <td mat-cell *matCellDef="let employee">
         <button mat-flat-button color="accent" [routerLink]="['/employees', employee.id, 'edit']">Edit</button>
         <button (click)="remove(employee.id)" class="danger" mat-flat-button color="accent">Delete</button>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsValues"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsValues;"></tr>
   </table>
 </div>
 <mat-paginator

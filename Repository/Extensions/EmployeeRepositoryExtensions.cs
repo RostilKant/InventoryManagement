@@ -38,10 +38,10 @@ namespace Repository.Extensions
             if (string.IsNullOrWhiteSpace(searchTerm))
                 return queryable;
 
-            var lowerTerm = searchTerm.ToLower();
-            Guid.TryParse(searchTerm, out var id);
-            Enum.TryParse<EmployeeDepartment>(searchTerm, out var department);
-            
+            var splitTerm = searchTerm.Split(' ');
+            var lowerTerm = string.Join("", searchTerm.ToLower().Split(' '));
+            Enum.TryParse<EmployeeDepartment>(string.Join('_', splitTerm), out var department);
+
             return queryable.Where(x => 
                 x.Address.ToLower().Contains(lowerTerm) ||
                 x.City.ToLower().Contains(lowerTerm) ||
@@ -54,8 +54,7 @@ namespace Repository.Extensions
                 x.Phone.ToLower().Contains(lowerTerm) ||
                 x.FirstName.ToLower().Contains(lowerTerm) ||
                 x.LastName.ToLower().Contains(lowerTerm) ||
-                $"{x.FirstName} {x.LastName}".ToLower().Contains(lowerTerm) ||
-                x.Id.Equals(id)
+                (x.FirstName.ToLower() + x.LastName.ToLower()).Contains(lowerTerm)
                 );
         }
 
