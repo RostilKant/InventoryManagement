@@ -43,5 +43,15 @@ export const accessoriesDisplayedColumns = new Map<number, string>()
 export const accessoriesColumns: string[] = ['id', 'name', 'category', 'status', 'modelNumber',
   'manufacturer', 'officeAddress', 'purchaseCost', 'purchaseDate']
 
+export const componentsDisplayedColumns = new Map<number, string>()
+  .set(1, 'name')
+  .set(3, 'category')
+  .set(5, 'manufacturer')
+  .set(6, 'officeAddress')
+  .set(7, 'purchaseCost')
+
+export const componentsColumns: string[] = ['id', 'name', 'serial', 'category', 'status',
+  'manufacturer', 'officeAddress', 'purchaseCost', 'purchaseDate']
+
 
 

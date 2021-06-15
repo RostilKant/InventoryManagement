@@ -20,6 +20,10 @@ const routes: Routes = [
       {
         path: 'accessories', loadChildren: () => import('./accessories/accessory.module').then(m => m.AccessoryModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'components', loadChildren: () => import('./components/component.module').then(m => m.ComponentModule),
+        canActivate: [AuthGuard]
       }
     ]
   },

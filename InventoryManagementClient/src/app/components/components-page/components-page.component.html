@@ -1,0 +1,166 @@
+<ng-template #loading>
+  <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+</ng-template>
+
+<mat-form-field
+  appearance="outline"
+  color="accent"
+  class="search-field"
+>
+  <mat-label>Search...</mat-label>
+  <label>
+    <input
+      matInput
+      placeholder="Find any components"
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="search()"
+    >
+  </label>
+</mat-form-field>
+
+<button
+  mat-icon-button
+  class="select-field"
+  (click)=select.open()>
+
+  <mat-icon class="field-icon">view_column</mat-icon>
+
+  <mat-select multiple #select class="disable-arrow">
+    <mat-option *ngFor="let column of defaultColumns;index as idx">
+      <mat-checkbox
+        *ngIf="idx != defaultColumns.length"
+        [checked]="ifExists(column)"
+        (change)="manipulateFields($event, idx)"
+      >
+        {{column | titlecase}}
+      </mat-checkbox>
+    </mat-option>
+  </mat-select>
+</button>
+
+<button
+  mat-flat-button
+  color="accent"
+  class="button-right"
+  [routerLink]="['/components', 'create']"
+>
+  Create new
+</button>
+
+<mat-chip-list>
+  <mat-chip
+    *ngFor="let chip of filterByValue"
+    [removable]="removable"
+    (removed)="removeChip(chip)"
+  >
+    {{chip | removeUnderscore}}
+    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+  </mat-chip>
+</mat-chip-list>
+
+<div class="table-box" *ngIf="!isLoading; else loading">
+  <table mat-table [dataSource]="components"
+         matSort
+         (matSortChange)="sortData($event)"
+  >
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id</th>
+      <td mat-cell *matCellDef="let component"> {{component.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let component"
+        (click)="filtering('name', component.name)"
+      >
+        {{component.name | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="serial">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Serial </th>
+      <td mat-cell *matCellDef="let component"> {{component.serial}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let component"
+        (click)="filtering('category', component.category)"
+      >
+        {{component.category | uppercase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let component"
+        (click)="filtering('status', component.status)"
+      >
+        {{component.status | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="manufacturer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Manufacturer </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let component"
+        (click)="filtering('manufacturer', component.manufacturer)"
+      >
+        {{component.manufacturer | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="officeAddress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Office address </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let component"
+        (click)="filtering('officeAddress', component.officeAddress)"
+      >
+        {{component.officeAddress | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="purchaseCost">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase cost </th>
+      <td mat-cell *matCellDef="let component"> {{component.purchaseCost}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="purchaseDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase date </th>
+      <td mat-cell *matCellDef="let component"> {{component.purchaseDate | date}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions</th>
+      <td mat-cell *matCellDef="let component">
+        <button mat-flat-button color="accent" [routerLink]="['/components', component.id, 'edit']">Edit</button>
+        <button (click)="remove(component.id)" class="danger" mat-flat-button color="accent">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsValues"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsValues;"></tr>
+  </table>
+</div>
+<mat-paginator
+  *ngIf="!isLoading"
+  [length]="componentsCount"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="paging($event)"
+>
+</mat-paginator>

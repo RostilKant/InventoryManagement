@@ -23,7 +23,7 @@ export class EmployeesPageComponent implements OnInit {
   // changing fields feature
   displayedColumns = employeesDisplayedColumns
   defaultColumns = employeesColumns
-  displayedColumnsValues: Array<string> = new Array<string>(11)
+  displayedColumnsValues: Array<string> = new Array<string>(this.defaultColumns.length)
   removable: boolean = true
 
   searchTerm: string = ''

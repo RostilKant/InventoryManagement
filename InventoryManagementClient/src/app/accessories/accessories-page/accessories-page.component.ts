@@ -26,7 +26,7 @@ export class AccessoriesPageComponent implements OnInit {
   // changing fields feature
   displayedColumns = accessoriesDisplayedColumns
   defaultColumns = accessoriesColumns
-  displayedColumnsValues: Array<string> = new Array<string>(11)
+  displayedColumnsValues: Array<string> = new Array<string>(this.defaultColumns.length)
   removable: boolean = true
 
   searchTerm: string = ''

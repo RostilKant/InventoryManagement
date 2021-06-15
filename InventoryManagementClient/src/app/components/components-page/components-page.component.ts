@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
-  devicesColumns,
-  devicesDisplayedColumns
+  componentsColumns,
+  componentsDisplayedColumns
 } from "../../shared/models/constants";
 import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
@@ -9,23 +9,23 @@ import {delay} from "rxjs/operators";
 import {PageEvent} from "@angular/material/paginator";
 import {Sort} from "@angular/material/sort";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {DeviceModel} from "../../shared/models/device/device.model";
-import {DeviceService} from "../device.service";
+import {ComponentModel} from "../../shared/models/component/component.model";
+import {ComponentService} from "../component.service";
 
 @Component({
-  selector: 'app-devices-page',
-  templateUrl: './devices-page.component.html',
-  styleUrls: ['./devices-page.component.scss']
+  selector: 'app-components-page',
+  templateUrl: './components-page.component.html',
+  styleUrls: ['./components-page.component.scss']
 })
-export class DevicesPageComponent implements OnInit {
+export class ComponentsPageComponent implements OnInit {
 
   isLoading: boolean = false
-  devices: DeviceModel[] = []
-  devicesCount: number = 0
+  components: ComponentModel[] = []
+  componentsCount: number = 0
 
   // changing fields feature
-  displayedColumns = devicesDisplayedColumns
-  defaultColumns = devicesColumns
+  displayedColumns = componentsDisplayedColumns
+  defaultColumns = componentsColumns
   displayedColumnsValues: Array<string> = new Array<string>(this.defaultColumns.length)
   removable: boolean = true
 
@@ -42,7 +42,7 @@ export class DevicesPageComponent implements OnInit {
   deleteSub: Subscription = new Subscription()
 
   constructor(
-    private deviceService: DeviceService,
+    private componentService: ComponentService,
     private router: Router
   ) {
   }
@@ -51,10 +51,10 @@ export class DevicesPageComponent implements OnInit {
     this.initColumnValues()
 
     this.isLoading = true
-    this.getAllSub = this.deviceService.getAll(this.searchTerm, this.orderBy, this.pageNumber, this.pageSize)
+    this.getAllSub = this.componentService.getAll(this.searchTerm, this.orderBy, this.pageNumber, this.pageSize)
       .pipe(delay(888))
-      .subscribe((response: DeviceModel[]) => {
-        this.devices = response
+      .subscribe((response: ComponentModel[]) => {
+        this.components = response
         this.isLoading = false
       }, error => {
         console.log(error)
@@ -62,9 +62,9 @@ export class DevicesPageComponent implements OnInit {
           this.router.navigate(['/auth', 'login'])
         }
       })
-    this.deviceService.getAll(this.searchTerm, this.orderBy, 1, 10000000)
-      .subscribe((response: DeviceModel[]) => {
-        this.devicesCount = response.length
+    this.componentService.getAll(this.searchTerm, this.orderBy, 1, 10000000)
+      .subscribe((response: ComponentModel[]) => {
+        this.componentsCount = response.length
       })
   }
 
@@ -84,21 +84,21 @@ export class DevicesPageComponent implements OnInit {
   }
 
   remove(id: string) {
-    this.deleteSub = this.deviceService.delete(id)
+    this.deleteSub = this.componentService.delete(id)
       .subscribe(() => {
-        this.devices = this.devices.filter(x => x.id != id)
-        this.devicesCount = this.devices.length
+        this.components = this.components.filter(x => x.id != id)
+        this.componentsCount = this.components.length
       }, error => {
         console.log(error);
       })
   }
 
   search() {
-    this.searchAllSub = this.deviceService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
+    this.searchAllSub = this.componentService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
       this.pageSize, this.filterBy, this.filterByValue)
-      .subscribe((response) => {
-        this.devicesCount = response.length
-        this.devices = response
+      .subscribe((response: ComponentModel[]) => {
+        this.componentsCount = response.length
+        this.components = response
         console.log(response)
       }, error => {
         console.log(error)
@@ -108,10 +108,10 @@ export class DevicesPageComponent implements OnInit {
   paging($event: PageEvent) {
     this.pageSize = $event.pageSize
     this.pageNumber = ++$event.pageIndex
-    this.paginateAllSub = this.deviceService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
+    this.paginateAllSub = this.componentService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
       this.pageSize, this.filterBy, this.filterByValue)
-      .subscribe((response: DeviceModel[]) => {
-        this.devices = response
+      .subscribe((response: ComponentModel[]) => {
+        this.components = response
       })
   }
 
@@ -121,10 +121,10 @@ export class DevicesPageComponent implements OnInit {
     else
       this.orderBy = ''
 
-    this.deviceService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
+    this.componentService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
       this.pageSize, this.filterBy, this.filterByValue)
-      .subscribe((response: DeviceModel[]) => {
-        this.devices = response
+      .subscribe((response: ComponentModel[]) => {
+        this.components = response
       })
   }
 
@@ -157,16 +157,16 @@ export class DevicesPageComponent implements OnInit {
   }
 
   filtering(field: string, filterBy: string) {
-    if (!this.filterBy.includes(field) && filterBy != ''){
+    if (!this.filterBy.includes(field) && filterBy != '') {
       this.filterBy.push(field)
       this.filterByValue.push(filterBy)
     }
 
-    this.getAllSub = this.deviceService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
+    this.getAllSub = this.componentService.getAll(this.searchTerm, this.orderBy, this.pageNumber,
       this.pageSize, this.filterBy, this.filterByValue)
-      .subscribe((response: DeviceModel[]) => {
-        this.devicesCount = response.length
-        this.devices = response
+      .subscribe((response: ComponentModel[]) => {
+        this.componentsCount = response.length
+        this.components = response
       }, error => console.log(error))
   }
 
