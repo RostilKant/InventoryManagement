@@ -8,6 +8,7 @@ import { DashboardPageComponent } from './dashboard-page/dashboard-page.componen
 import {SharedModule} from "./shared/shared.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {EmployeeModule} from "./employees/employee.module";
+import {DeviceModule} from "./devices/device.module";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {EmployeeModule} from "./employees/employee.module";
     BrowserAnimationsModule,
     AppRoutingModule,
     EmployeeModule,
+    DeviceModule,
     SharedModule
   ],
   providers: [],

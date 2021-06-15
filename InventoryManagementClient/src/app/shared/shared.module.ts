@@ -20,6 +20,10 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import { RemoveUnderscorePipe } from './pipes/remove-underscore.pipe';
 import {MatSelectModule} from "@angular/material/select";
 import {MatSortModule} from "@angular/material/sort";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatListModule} from "@angular/material/list";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
   imports: [
@@ -46,7 +50,11 @@ import {MatSortModule} from "@angular/material/sort";
         MatProgressSpinnerModule,
         MatPaginatorModule,
         MatSelectModule,
-        MatSortModule
+        MatSortModule,
+        MatCheckboxModule,
+        MatExpansionModule,
+        MatListModule,
+        MatChipsModule
     ],
   providers: [
     AuthService,

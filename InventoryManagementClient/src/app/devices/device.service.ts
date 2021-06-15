@@ -1,10 +1,10 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {EmployeeForCreationModel} from "../shared/models/employee/employeeForCreation.model";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {EmployeeModel} from "../shared/models/employee/employee.model";
 import {host} from "../shared/models/constants";
-import {EmployeeForEditingModel} from "../shared/models/employee/employeeForEditing.model";
+import {DeviceModel} from "../shared/models/device/device.model";
+import {DeviceForEditingModel} from "../shared/models/device/deviceForEditing.model";
+import {DeviceForCreationModel} from "../shared/models/device/deviceForCreation.model";
 
 @Injectable()
 export class DeviceService {
@@ -14,29 +14,36 @@ export class DeviceService {
   ) {
   }
 
-  getAll(searchTerm: string = '', pageNumber: number = 1, pageSize: number = 10)
-    : Observable<EmployeeModel[]> {
-    return this.http.get<EmployeeModel[]>(`${host}/employees`, {
-      params: {
-        pageNumber: pageNumber,
-        pageSize: pageSize,
-        searchTerm: searchTerm
-      }
+  getAll(searchTerm: string = '', orderBy: string = '', pageNumber: number = 1, pageSize: number = 10,
+         filterBy: string[] = [], filterByValue: string[] = [])
+    : Observable<DeviceModel[]> {
+    let params: HttpParams = new HttpParams()
+    params = params.append('pageNumber', pageNumber)
+    params = params.append('pageSize', pageSize)
+    params = params.append('searchTerm', searchTerm)
+    params = params.append('orderBy', orderBy)
+    for (let i = 0; i < filterBy.length; i++){
+      params = params.append(filterBy[i], filterByValue[i])
+    }
+
+    return this.http.get<DeviceModel[]>(`${host}/devices`, {
+      params
     })
   }
-  getById(id: string): Observable<EmployeeModel>{
-    return this.http.get<EmployeeModel>(`${host}/employees/${id}`)
+
+  getById(id: string): Observable<DeviceModel> {
+    return this.http.get<DeviceModel>(`${host}/devices/${id}`)
   }
 
-  create(employee: EmployeeForCreationModel): Observable<EmployeeModel> {
-    return this.http.post<EmployeeModel>(`${host}/employees`, employee)
+  create(device: DeviceForCreationModel): Observable<DeviceModel> {
+    return this.http.post<DeviceModel>(`${host}/devices`, device)
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${host}/employees/${id}`);
+    return this.http.delete<void>(`${host}/devices/${id}`);
   }
 
-  update(id: string, employee: EmployeeForEditingModel): Observable<EmployeeModel> {
-    return this.http.put<EmployeeModel>(`${host}/employees/${id}`, employee);
+  update(id: string, device: DeviceForEditingModel): Observable<DeviceModel> {
+    return this.http.put<DeviceModel>(`${host}/devices/${id}`, device);
   }
 }

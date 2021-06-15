@@ -1,12 +1,10 @@
 import {DeviceCategory} from "../../enums/device-category.enum";
-import {AssetStatus} from "../../enums/asset-status.enum";
 
-export interface DeviceModel {
-  id: string,
+export interface DeviceForEditingModel {
   model: string,
   serial: string,
   category: DeviceCategory,
-  status: AssetStatus,
+  status: string,
   manufacturer: string,
   officeAddress: string,
   purchaseCost: number,
