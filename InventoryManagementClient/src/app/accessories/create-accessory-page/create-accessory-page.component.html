@@ -1,0 +1,150 @@
+<h2>Create new accessory</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input accessory's name"
+      formControlName="name"
+      id="name"
+    >
+    <mat-error
+      *ngIf="form.get('name')?.touched && form.get('name')?.invalid"
+    >
+      {{ errorMessage('name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Category</mat-label>
+    <mat-select
+      formControlName="category"
+      id="category">
+      <mat-option *ngFor="let category of accessoryCategories" [value]="category">
+        {{category | removeUnderscore}}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="form.get('category')?.touched && form.get('category')?.invalid"
+    >
+      {{ errorMessage('category') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Status</mat-label>
+    <mat-select
+      formControlName="status"
+      id="status">
+      <mat-option *ngFor="let status of assetStatuses" [value]="status">
+        {{status | removeUnderscore}}
+      </mat-option>
+    </mat-select>
+    <mat-error
+      *ngIf="form.get('status')?.touched && form.get('status')?.invalid"
+    >
+      {{ errorMessage('status') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Model number</mat-label>
+    <input
+      matInput
+      placeholder="Please, input accessory's model number"
+      formControlName="modelNumber"
+      id="modelNumber"
+    >
+    <mat-error
+      *ngIf="form.get('modelNumber')?.touched && form.get('modelNumber')?.invalid"
+    >
+      {{ errorMessage('modelNumber') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Manufacturer</mat-label>
+    <input
+      matInput
+      placeholder="Please, input accessory's manufacturer"
+      formControlName="manufacturer"
+      id="manufacturer"
+    >
+    <mat-error
+      *ngIf="form.get('manufacturer')?.touched && form.get('manufacturer')?.invalid"
+    >
+      {{ errorMessage('manufacturer') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Office address</mat-label>
+    <input
+      matInput
+      placeholder="Please, input accessory's office address"
+      formControlName="officeAddress"
+      id="officeAddress"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Purchase cost</mat-label>
+    <input
+      matInput
+      placeholder="Please, input accessory's purchase cost"
+      formControlName="purchaseCost"
+      id="purchaseCost"
+    >
+    <mat-error
+      *ngIf="form.get('purchaseCost')?.touched && form.get('purchaseCost')?.invalid"
+    >
+      {{ errorMessage('purchase','cost') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Purchase date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="purchasePicker"
+      formControlName="purchaseDate"
+      id="purchaseDate"
+    >
+    <mat-datepicker-toggle matSuffix [for]="purchasePicker"></mat-datepicker-toggle>
+    <mat-datepicker #purchasePicker></mat-datepicker>
+    <mat-error
+      *ngIf="form.get('purchaseDate')?.touched && form.get('purchaseDate')?.invalid"
+    >
+      {{ errorMessage('purchase', 'Date') }}
+    </mat-error>
+  </mat-form-field>
+
+  <button
+    mat-flat-button
+    color="accent"
+    type="submit"
+    [disabled]="form.invalid || submitted"
+  >
+    Create
+  </button>
+</form>

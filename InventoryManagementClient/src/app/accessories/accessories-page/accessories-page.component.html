@@ -42,7 +42,7 @@
   mat-flat-button
   color="accent"
   class="button-right"
-  [routerLink]="['/devices', 'create']"
+  [routerLink]="['/accessories', 'create']"
 >
   Create new
 </button>
@@ -146,9 +146,9 @@
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell *matCellDef="let device">
-        <button mat-flat-button color="accent" [routerLink]="['/devices', device.id, 'edit']">Edit</button>
-        <button (click)="remove(device.id)" class="danger" mat-flat-button color="accent">Delete</button>
+      <td mat-cell *matCellDef="let accessory">
+        <button mat-flat-button color="accent" [routerLink]="['/accessories', accessory.id, 'edit']">Edit</button>
+        <button (click)="remove(accessory.id)" class="danger" mat-flat-button color="accent">Delete</button>
       </td>
     </ng-container>
 
