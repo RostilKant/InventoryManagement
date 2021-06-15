@@ -16,6 +16,10 @@ const routes: Routes = [
       {
         path: 'devices', loadChildren: () => import('./devices/device.module').then(m => m.DeviceModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'accessories', loadChildren: () => import('./accessories/accessory.module').then(m => m.AccessoryModule),
+        canActivate: [AuthGuard]
       }
     ]
   },
