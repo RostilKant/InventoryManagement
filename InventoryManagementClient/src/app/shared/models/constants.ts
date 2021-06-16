@@ -63,6 +63,15 @@ export const consumablesDisplayedColumns = new Map<number, string>()
 export const consumablesColumns: string[] = ['id', 'name', 'category', 'status',
   'manufacturer', 'officeAddress', 'purchaseCost', 'purchaseDate']
 
+export const licensesDisplayedColumns = new Map<number, string>()
+  .set(1, 'name')
+  .set(2, 'category')
+  .set(3, 'productKey')
+  .set(5, 'expiresAt')
+  .set(6, 'manufacturer')
+
+export const licensesColumns: string[] = ['id', 'name', 'category', 'productKey', 'licensedToEmail',
+  'expiresAt', 'manufacturer', 'purchaseCost', 'purchaseDate', 'isReAssignable']
 
 
 

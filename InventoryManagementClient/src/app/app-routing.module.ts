@@ -28,6 +28,10 @@ const routes: Routes = [
       {
         path: 'consumables', loadChildren: () => import('./consumables/consumable.module').then(m => m.ConsumableModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'licenses', loadChildren: () => import('./licenses/license.module').then(m => m.LicenseModule),
+        canActivate: [AuthGuard]
       }
     ]
   },

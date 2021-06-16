@@ -22,7 +22,8 @@ import { CreateConsumablePageComponent } from './create-consumable-page/create-c
       {path: 'create', component: CreateConsumablePageComponent},
       {path: ':id/edit', component: EditConsumablePageComponent}
 
-    ]),  ],
+    ]),
+  ],
   exports: [
     RouterModule
   ],
