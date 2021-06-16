@@ -45,6 +45,7 @@ namespace InventoryManagement
             CreateMap<LicenseForUpdateDto, License>();
 
             CreateMap<UserForRegistrationDto, User>();
+            CreateMap<UserForUpdateDto, User>();
         }
     }
 }
