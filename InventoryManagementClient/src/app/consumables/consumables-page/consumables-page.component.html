@@ -1,0 +1,161 @@
+<ng-template #loading>
+  <mat-progress-spinner mode="indeterminate" color="accent"></mat-progress-spinner>
+</ng-template>
+
+<mat-form-field
+  appearance="outline"
+  color="accent"
+  class="search-field"
+>
+  <mat-label>Search...</mat-label>
+  <label>
+    <input
+      matInput
+      placeholder="Find any consumables"
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="search()"
+    >
+  </label>
+</mat-form-field>
+
+<button
+  mat-icon-button
+  class="select-field"
+  (click)=select.open()>
+
+  <mat-icon class="field-icon">view_column</mat-icon>
+
+  <mat-select multiple #select class="disable-arrow">
+    <mat-option *ngFor="let column of defaultColumns;index as idx">
+      <mat-checkbox
+        *ngIf="idx != defaultColumns.length"
+        [checked]="ifExists(column)"
+        (change)="manipulateFields($event, idx)"
+      >
+        {{column | titlecase}}
+      </mat-checkbox>
+    </mat-option>
+  </mat-select>
+</button>
+
+<button
+  mat-flat-button
+  color="accent"
+  class="button-right"
+  [routerLink]="['/consumables', 'create']"
+>
+  Create new
+</button>
+
+<mat-chip-list>
+  <mat-chip
+    *ngFor="let chip of filterByValue"
+    [removable]="removable"
+    (removed)="removeChip(chip)"
+  >
+    {{chip | removeUnderscore}}
+    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+  </mat-chip>
+</mat-chip-list>
+
+<div class="table-box" *ngIf="!isLoading; else loading">
+  <table mat-table [dataSource]="consumables"
+         matSort
+         (matSortChange)="sortData($event)"
+  >
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id</th>
+      <td mat-cell *matCellDef="let consumable"> {{consumable.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let consumable"
+        (click)="filtering('name', consumable.name)"
+      >
+        {{consumable.name | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let consumable"
+        (click)="filtering('category', consumable.category)"
+      >
+        {{consumable.category | removeUnderscore}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let consumable"
+        (click)="filtering('status', consumable.status)"
+      >
+        {{consumable.status | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="manufacturer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Manufacturer </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let consumable"
+        (click)="filtering('manufacturer', consumable.manufacturer)"
+      >
+        {{consumable.manufacturer | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="officeAddress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Office address </th>
+      <td
+        mat-cell
+        style="color: dodgerblue"
+        *matCellDef="let consumable"
+        (click)="filtering('officeAddress', consumable.officeAddress)"
+      >
+        {{consumable.officeAddress | titlecase}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="purchaseCost">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase cost </th>
+      <td mat-cell *matCellDef="let consumable"> {{consumable.purchaseCost}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="purchaseDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase date </th>
+      <td mat-cell *matCellDef="let consumable"> {{consumable.purchaseDate | date}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions</th>
+      <td mat-cell *matCellDef="let consumable">
+        <button mat-flat-button color="accent" [routerLink]="['/consumables', consumable.id, 'edit']">Edit</button>
+        <button (click)="remove(consumable.id)" class="danger" mat-flat-button color="accent">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsValues"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsValues;"></tr>
+  </table>
+</div>
+<mat-paginator
+  *ngIf="!isLoading"
+  [length]="consumablesCount"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="paging($event)"
+>
+</mat-paginator>

@@ -6,9 +6,7 @@ import {ComponentModel} from "../shared/models/component/component.model";
 import {ComponentForCreationModel} from "../shared/models/component/componentForCreation.model";
 import {ComponentForEditingModel} from "../shared/models/component/componentForEditing.model";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ComponentService {
 
   constructor(private http: HttpClient) {

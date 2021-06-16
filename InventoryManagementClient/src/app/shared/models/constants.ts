@@ -53,5 +53,16 @@ export const componentsDisplayedColumns = new Map<number, string>()
 export const componentsColumns: string[] = ['id', 'name', 'serial', 'category', 'status',
   'manufacturer', 'officeAddress', 'purchaseCost', 'purchaseDate']
 
+export const consumablesDisplayedColumns = new Map<number, string>()
+  .set(1, 'name')
+  .set(2, 'category')
+  .set(4, 'manufacturer')
+  .set(5, 'officeAddress')
+  .set(6, 'purchaseCost')
+
+export const consumablesColumns: string[] = ['id', 'name', 'category', 'status',
+  'manufacturer', 'officeAddress', 'purchaseCost', 'purchaseDate']
+
+
 
 

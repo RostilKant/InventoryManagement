@@ -24,6 +24,10 @@ const routes: Routes = [
       {
         path: 'components', loadChildren: () => import('./components/component.module').then(m => m.ComponentModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'consumables', loadChildren: () => import('./consumables/consumable.module').then(m => m.ConsumableModule),
+        canActivate: [AuthGuard]
       }
     ]
   },
