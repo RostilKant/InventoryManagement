@@ -1,0 +1,167 @@
+<h2>Updating user</h2>
+
+<form
+  [formGroup]="updateForm"
+  (ngSubmit)="submitUpdate()"
+>
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>First name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input your first name"
+      formControlName="firstName"
+      id="firstName"
+    >
+    <mat-error
+      *ngIf="updateForm.get('firstName')?.touched && updateForm.get('firstName')?.invalid"
+    >
+      {{ errorMessage('first', 'Name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Last name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input your last name"
+      formControlName="lastName"
+      id="lastName"
+    >
+    <mat-error
+      *ngIf="updateForm.get('lastName')?.touched && updateForm.get('lastName')?.invalid"
+    >
+      {{ errorMessage('last', 'Name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>User name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input your user name"
+      formControlName="userName"
+      id="userName"
+    >
+    <mat-error
+      *ngIf="updateForm.get('userName')?.touched && updateForm.get('userName')?.invalid"
+    >
+      {{ errorMessage('user', 'Name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Company name</mat-label>
+    <input
+      matInput
+      placeholder="Please, input company name"
+      formControlName="companyName"
+      id="companyName"
+    >
+    <mat-error
+      *ngIf="updateForm.get('companyName')?.touched && updateForm.get('companyName')?.invalid"
+    >
+      {{ errorMessage('company', 'Name') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      placeholder="Please, input your email"
+      formControlName="email"
+      id="email"
+    >
+    <mat-error
+      *ngIf="updateForm.get('email')?.touched && updateForm.get('email')?.invalid"
+    >
+      {{ errorMessage('email') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Phone number</mat-label>
+    <input
+      matInput
+      placeholder="Please, input your phone number"
+      formControlName="phoneNumber"
+      id="phoneNumber"
+    >
+    <mat-error
+      *ngIf="updateForm.get('phoneNumber')?.touched && updateForm.get('phoneNumber')?.invalid"
+    >
+      {{ errorMessage('phone', 'Number') }}
+    </mat-error>
+  </mat-form-field>
+
+  <button
+    mat-flat-button
+    color="accent"
+    type="submit"
+    [disabled]="updateForm.invalid || submitted"
+  >
+    Update
+  </button>
+</form>
+
+<form
+  [formGroup]="passForm"
+  (ngSubmit)="submitPass()"
+>
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>Old password</mat-label>
+    <input
+      type="password"
+      matInput
+      placeholder="Please, input your old password"
+      formControlName="oldPassword"
+      id="oldPassword"
+    >
+    <mat-error
+      *ngIf="passForm.get('oldPassword')?.touched && passForm.get('oldPassword')?.invalid"
+    >
+      {{ errorMessage('old', 'Password') }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    color="primary"
+  >
+    <mat-label>New password</mat-label>
+    <input
+      type="password"
+      matInput
+      placeholder="Please, input your new password"
+      formControlName="newPassword"
+      id="newPassword"
+    >
+    <mat-error
+      *ngIf="passForm.get('newPassword')?.touched && passForm.get('newPassword')?.invalid"
+    >
+      {{ errorMessage('new', 'Password') }}
+    </mat-error>
+  </mat-form-field>
+
+  <button
+    mat-flat-button
+    color="accent"
+    type="submit"
+    [disabled]="passForm.invalid || submitted"
+  >
+    Change password
+  </button>
+</form>

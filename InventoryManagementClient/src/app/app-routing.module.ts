@@ -32,6 +32,10 @@ const routes: Routes = [
       {
         path: 'licenses', loadChildren: () => import('./licenses/license.module').then(m => m.LicenseModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+        canActivate: [AuthGuard]
       }
     ]
   },
