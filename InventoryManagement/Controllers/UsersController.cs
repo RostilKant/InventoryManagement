@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Entities.DataTransferObjects.User;
 using InventoryManagement.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using Services.ServiceExtensions;
@@ -37,6 +38,7 @@ namespace InventoryManagement.Controllers
             return Ok(new {token, exp });
         }
         
+        [Authorize]
         [HttpPost("update")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateUser([FromBody] UserForUpdateDto userForUpdate)
@@ -45,6 +47,7 @@ namespace InventoryManagement.Controllers
             return user ? NoContent() : BadRequest(ModelState);
         }
         
+        [Authorize]
         [HttpPost("change-pass")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> ChangeUserPassword([FromBody] UserChangePasswordDto changePasswordDto)
@@ -52,5 +55,12 @@ namespace InventoryManagement.Controllers
             var user = await _userService.ChangeUserPasswordAsync(User.GetCurrentUserId(), changePasswordDto, ModelState);
             return user ? NoContent() : BadRequest(ModelState);
         }
+        
+        [Authorize]
+        [HttpGet]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> GetCurrentUser()
+         => Ok(await _userService.GetCurrentUser(User.GetCurrentUserId()));
+        
     }
 }

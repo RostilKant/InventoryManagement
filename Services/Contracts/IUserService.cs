@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Entities.DataTransferObjects.User;
-using Entities.Models;
+using Entities.IdentityModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Services.Contracts
@@ -13,5 +13,7 @@ namespace Services.Contracts
         public Task<bool> UpdateUserInfoAsync(Guid? userId, UserForUpdateDto userForUpdate, ModelStateDictionary modelState);
 
         public Task<bool> ChangeUserPasswordAsync(Guid? userId, UserChangePasswordDto changePasswordDto, ModelStateDictionary modelState);
+
+        public Task<User> GetCurrentUser(Guid? id);
     }
 }

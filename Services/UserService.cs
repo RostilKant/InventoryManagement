@@ -71,5 +71,8 @@ namespace Services
 
             return false;
         }
+        
+        public async Task<User> GetCurrentUser(Guid? id) =>
+            await _userManager.FindByIdAsync(id.ToString());
     }
 }
