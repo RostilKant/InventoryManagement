@@ -19,7 +19,7 @@ namespace Repository
         public async Task<PagedList<Consumable>> GetAllConsumablesAsync(Guid userId,
             ConsumableParameters consumableParameters)
         {
-            var result = await FindAll()
+            var result = await FindByCondition(x => x.User.Id.Equals(userId))
                 .FilterBy(consumableParameters)
                 .Search(consumableParameters.SearchTerm)
                 .Sort(consumableParameters.OrderBy)
@@ -31,7 +31,7 @@ namespace Repository
         }
 
         public async Task<Consumable> GetConsumableAsync(Guid userId, Guid id, bool trackChanges = false) =>
-            await FindByCondition(x => x.Id.Equals(id), trackChanges)
+            await FindByCondition(x => x.Id.Equals(id) && x.User.Id.Equals(userId), trackChanges)
                 .SingleOrDefaultAsync();
 
 
