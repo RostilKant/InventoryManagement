@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Entities.Configuration;
 using Entities.IdentityModels;
 using Entities.Models;
@@ -10,9 +13,15 @@ namespace Entities
 {
     public class ApplicationContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
-        public ApplicationContext(DbContextOptions options)
+        public string TenantId { get; set; }
+        private readonly ITenantService _tenantService;
+
+        public ApplicationContext(DbContextOptions options, ITenantService tenantService)
             : base(options)
-        { }
+        {
+            _tenantService = tenantService;
+            TenantId = _tenantService.GetTenant()?.Id;
+        }
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<License> Licenses { get; set; }    
@@ -20,6 +29,30 @@ namespace Entities
         public DbSet<Component> Components { get; set; }
         public DbSet<Accessory> Accessories { get; set; }
         public DbSet<Consumable> Consumables { get; set; }
+        
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var tenantConnectionString = _tenantService.GetConnectionString();
+            
+            if (!string.IsNullOrEmpty(tenantConnectionString))
+            {
+                var dbProvider = _tenantService.GetDatabaseProvider();
+
+                switch (dbProvider.ToLower())
+                {
+                    case "mssql":
+                        optionsBuilder.UseSqlServer(_tenantService.GetConnectionString(),
+                            builder => builder.MigrationsAssembly("InventoryManagement"));
+                        break;
+                    case "postgres":
+                        optionsBuilder.UseNpgsql(_tenantService.GetConnectionString(),
+                            builder => builder.MigrationsAssembly("InventoryManagement"));
+                        break;
+                    default:
+                        throw new Exception("Invalid database provider!");
+                }
+            }
+        }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +67,8 @@ namespace Entities
                 .WithOne(d => d.Employee)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Employee>().HasQueryFilter(a => a.TenantId == TenantId);
 
             modelBuilder.Entity<Device>()
                 .HasMany(d => d.Accessories)
@@ -60,6 +95,8 @@ namespace Entities
             modelBuilder.Entity<Device>()
                 .Property(d => d.Category)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Device>().HasQueryFilter(a => a.TenantId == TenantId);
             
             modelBuilder.Entity<Employee>()
                 .Property(e => e.Department)
@@ -68,6 +105,8 @@ namespace Entities
             modelBuilder.Entity<License>()
                 .Property(l => l.Category)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<License>().HasQueryFilter(a => a.TenantId == TenantId);
             
             modelBuilder.Entity<Component>()
                 .Property(c => c.Category)
@@ -76,6 +115,8 @@ namespace Entities
             modelBuilder.Entity<Component>()
                 .Property(c => c.Status)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Component>().HasQueryFilter(a => a.TenantId == TenantId);
             
             modelBuilder.Entity<Consumable>()
                 .Property(c => c.Status)
@@ -84,6 +125,8 @@ namespace Entities
             modelBuilder.Entity<Consumable>()
                 .Property(c => c.Category)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Consumable>().HasQueryFilter(a => a.TenantId == TenantId);
             
             modelBuilder.Entity<Accessory>()
                 .Property(a => a.Category)
@@ -92,10 +135,25 @@ namespace Entities
             modelBuilder.Entity<Accessory>()
                 .Property(a => a.Status)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<Accessory>().HasQueryFilter(a => a.TenantId == TenantId);
             
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new DeviceConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        }
+        
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+        {
+            foreach (var entry in ChangeTracker.Entries<IMustHaveTenant>().ToList())
+                entry.Entity.TenantId = entry.State switch
+                {
+                    EntityState.Added => TenantId,
+                    EntityState.Modified => TenantId,
+                    _ => entry.Entity.TenantId
+                };
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

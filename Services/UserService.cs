@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities.DataTransferObjects.User;
 using Entities.IdentityModels;
-using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using Services.Contracts;
 
@@ -36,40 +35,37 @@ namespace Services
             return entity;
         }
 
-        public async Task<bool> UpdateUserInfoAsync(Guid? userId, UserForUpdateDto userForUpdate, ModelStateDictionary modelState)
+        public async Task<(bool, IEnumerable<IdentityError>)> UpdateUserInfoAsync(Guid? userId, UserForUpdateDto userForUpdate)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
             {
                 _logger.LogWarning("User with such id {Id} wasn't found", userId);
-                return false;
+                return (false, new List<IdentityError>
+                {
+                    new()
+                    {
+                        Code = "404",
+                        Description = "User with such id wasn't found"
+                    }
+                });
             }
 
             _mapper.Map(userForUpdate, user);
             var result = await _userManager.UpdateAsync(user);
 
-            if (result.Succeeded) return true;
-            
-            foreach (var error in result.Errors)
-                modelState.TryAddModelError(error.Code, error.Description);
-
-            return false;
+            return result.Succeeded ? (true, null) : (false, result.Errors);
         }
 
-        public async Task<bool> ChangeUserPasswordAsync(Guid? userId, UserChangePasswordDto changePasswordDto, ModelStateDictionary modelState)
+        public async Task<(bool, IEnumerable<IdentityError>)> ChangeUserPasswordAsync(Guid? userId, UserChangePasswordDto changePasswordDto)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             var result = await _userManager.ChangePasswordAsync(user, 
                 changePasswordDto.OldPassword, changePasswordDto.NewPassword);
             
-            if (result.Succeeded) return true;
-            
-            foreach (var error in result.Errors)
-                modelState.TryAddModelError(error.Code, error.Description);
-
-            return false;
+            return result.Succeeded ? (true, null) : (false, result.Errors);
         }
         
         public async Task<User> GetCurrentUser(Guid? id) =>

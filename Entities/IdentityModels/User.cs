@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Entities.IdentityModels
 {
-    public class User : IdentityUser<Guid>
+    public class User : IdentityUser<Guid>, IMustHaveTenant
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -18,5 +18,8 @@ namespace Entities.IdentityModels
         public ICollection<Component> Components { get; set; }
         public ICollection<Consumable> Consumables { get; set; }
         public ICollection<Accessory> Accessories { get; set; }
+        
+        
+        public string TenantId { get; set; }
     }
 }

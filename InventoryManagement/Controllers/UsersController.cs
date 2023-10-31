@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Entities.DataTransferObjects.User;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
@@ -20,13 +19,31 @@ namespace InventoryManagement.Controllers
             _authenticationService = authenticationService;
             _userService = userService;
         }
-
-        [HttpPost]
-        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
-            =>
-                await _authenticationService.RegisterUserAsync(userForRegistration, ModelState) ?
-                    StatusCode(201) : BadRequest(ModelState);
         
+        [HttpPost("organization")]
+        public async Task<IActionResult> RegisterOrganization([FromBody] OrganizationForRegistrationDto organizationForRegistration)
+        {
+            var (isCreated, errors) = await _authenticationService.RegisterOrganizationAsync(organizationForRegistration);
+
+            if (isCreated) return StatusCode(201);
+
+            foreach (var error in errors) ModelState.AddModelError(error.Code, error.Description);    
+            
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("{tenantId}")]
+        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+        {
+            var (isCreated, errors) = await _authenticationService.RegisterUserAsync(userForRegistration);
+
+            if (isCreated) return StatusCode(201);
+
+            foreach (var error in errors) ModelState.AddModelError(error.Code, error.Description);    
+            
+            return BadRequest(ModelState);
+        }
+
         [HttpPost("login")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
@@ -43,8 +60,13 @@ namespace InventoryManagement.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateUser([FromBody] UserForUpdateDto userForUpdate)
         {
-            var user = await _userService.UpdateUserInfoAsync(User.GetCurrentUserId(), userForUpdate, ModelState);
-            return user ? NoContent() : BadRequest(ModelState);
+            var (user, errors) = await _userService.UpdateUserInfoAsync(User.GetCurrentUserId(), userForUpdate);
+            
+            if (user) return NoContent();
+            
+            foreach (var error in errors) ModelState.AddModelError(error.Code, error.Description);
+            
+            return BadRequest(ModelState);
         }
         
         [Authorize]
@@ -52,8 +74,13 @@ namespace InventoryManagement.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> ChangeUserPassword([FromBody] UserChangePasswordDto changePasswordDto)
         {
-            var user = await _userService.ChangeUserPasswordAsync(User.GetCurrentUserId(), changePasswordDto, ModelState);
-            return user ? NoContent() : BadRequest(ModelState);
+            var (user, errors) = await _userService.ChangeUserPasswordAsync(User.GetCurrentUserId(), changePasswordDto);
+            
+            if (user) return NoContent();
+
+            foreach (var error in errors) ModelState.AddModelError(error.Code, error.Description);
+            
+            return BadRequest(ModelState);
         }
         
         [Authorize]

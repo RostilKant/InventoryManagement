@@ -7,6 +7,7 @@ using System.Text;
 using AspNetCoreRateLimit;
 using Entities;
 using Entities.IdentityModels;
+using Entities.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,11 +37,11 @@ namespace InventoryManagement.Extensions
                 );
             });
 
-        public static void ConfigureSqlContext(this IServiceCollection services,
-            IConfiguration configuration) =>
-            services.AddDbContext<ApplicationContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("SQLConnection"),
-                    builder => builder.MigrationsAssembly("InventoryManagement")));
+        // public static void ConfigureSqlContext(this IServiceCollection services,
+        //     IConfiguration configuration) =>
+        //     services.AddDbContext<ApplicationContext>(options =>
+        //         options.UseNpgsql(configuration.GetConnectionString("SQLConnection"),
+        //             builder => builder.MigrationsAssembly("InventoryManagement")));
 
         public static void ConfigureRepositoryManager(this IServiceCollection services)
             => services.AddScoped<IRepositoryManager, RepositoryManager>();
@@ -55,6 +56,13 @@ namespace InventoryManagement.Extensions
             services.AddScoped<ILicenseService, LicenseService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
+            
+            services.AddTransient<ITenantService, TenantService>();
+        }
+        
+        public static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<TenantSettings>(configuration.GetSection("CustomSettings"));
         }
 
         public static void ConfigureRateLimitingOptions(this IServiceCollection services)

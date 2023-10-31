@@ -34,10 +34,13 @@ namespace InventoryManagement
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
-            services.ConfigureCors();
-            services.ConfigureSqlContext(Configuration);
-            services.ConfigureRepositoryManager();
+            // use http context accessor before services registration
+            services.ConfigureHttpContextAccessor();
             services.ConfigureServices();
+            services.ConfigureSettings(Configuration);
+            services.ConfigureCors();
+            services.AddAndMigrateTenantDatabases();
+            services.ConfigureRepositoryManager();
             services.AddAutoMapper(typeof(Startup));
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -46,13 +49,11 @@ namespace InventoryManagement
             services.AddScoped<ValidationFilterAttribute>();
             services.AddMemoryCache();
             
-            services.ConfigureRateLimitingOptions();
-            services.AddHttpContextAccessor();
+            // services.ConfigureRateLimitingOptions();
             
             services.AddAuthentication();
             services.ConfigureIdentity();
             services.ConfigureJwt(Configuration);
-            services.ConfigureHttpContextAccessor();
             services.ConfigureSwagger();
         }
 
@@ -81,7 +82,7 @@ namespace InventoryManagement
             
             app.UseCors("CORS");
 
-            app.UseIpRateLimiting();
+            // app.UseIpRateLimiting();
             
             app.UseRouting();
 
