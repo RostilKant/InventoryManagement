@@ -3,6 +3,7 @@ using Entities.DataTransferObjects.User;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Services.Contracts;
 using Services.ServiceExtensions;
 
@@ -21,19 +22,27 @@ namespace InventoryManagement.Controllers
         }
         
         [HttpPost("organization")]
-        public async Task<IActionResult> RegisterOrganization([FromBody] OrganizationForRegistrationDto organizationForRegistration)
+        public async Task<IActionResult> RegisterOrganization([FromBody] OrganizationForRegistrationDto organizationForRegistration,
+            [FromServices] IConfiguration config)
         {
             var (isCreated, errors) = await _authenticationService.RegisterOrganizationAsync(organizationForRegistration);
 
-            if (isCreated) return StatusCode(201);
+            if (isCreated)
+            {
+                var root = (IConfigurationRoot)config;
+                root.Reload();
+                
+                return StatusCode(201);
+            }
 
             foreach (var error in errors) ModelState.AddModelError(error.Code, error.Description);    
             
             return BadRequest(ModelState);
         }
 
-        [HttpPost("{tenantId}")]
-        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+        [HttpPost]
+        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration,
+            [FromQuery] string tenantId)
         {
             var (isCreated, errors) = await _authenticationService.RegisterUserAsync(userForRegistration);
 
@@ -46,9 +55,9 @@ namespace InventoryManagement.Controllers
 
         [HttpPost("login")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user, [FromQuery] string tenantId)
         {
-            if (!await _authenticationService.AuthenticateUserAsync(user))
+            if (!await _authenticationService.AuthenticateUserAsync(tenantId, user))
                 return Unauthorized();
             
             var (token, exp) = await _authenticationService.CreateTokenAsync();

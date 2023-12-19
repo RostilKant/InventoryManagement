@@ -11,7 +11,7 @@ namespace Services.Contracts
     {
         Task<(bool isCreated, IEnumerable<IdentityError>)> RegisterOrganizationAsync(OrganizationForRegistrationDto organizationForRegistration);
         Task<(bool, IEnumerable<IdentityError>)> RegisterUserAsync(UserForRegistrationDto userForRegistration);
-        Task<bool> AuthenticateUserAsync(UserForAuthenticationDto userForAuthentication);
+        Task<bool> AuthenticateUserAsync(string tenant, UserForAuthenticationDto userForAuthentication);
         Task<(string, DateTime)> CreateTokenAsync();
     }
 }

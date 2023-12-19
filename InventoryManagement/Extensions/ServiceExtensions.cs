@@ -8,6 +8,7 @@ using AspNetCoreRateLimit;
 using Entities;
 using Entities.IdentityModels;
 using Entities.Settings;
+using InventoryManagement.Messaging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -62,7 +63,7 @@ namespace InventoryManagement.Extensions
         
         public static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<TenantSettings>(configuration.GetSection("CustomSettings"));
+            services.Configure<TenantSettings>(configuration.GetSection("TenantSettings"));
         }
 
         public static void ConfigureRateLimitingOptions(this IServiceCollection services)
@@ -92,8 +93,6 @@ namespace InventoryManagement.Extensions
                 o.Password.RequireLowercase = true;
                 o.Password.RequireUppercase = true;
                 o.Password.RequiredUniqueChars = 1;
-                o.User.RequireUniqueEmail = true;
-                o.SignIn.RequireConfirmedEmail = true;
             });
             
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole<Guid>), builder.Services);
@@ -168,6 +167,16 @@ namespace InventoryManagement.Extensions
                     }
                 });
             });
+        }
+        
+        public static MassTransitBuilder AddMassTransitRabbitMQ(
+            this IServiceCollection services,
+            IConfiguration config)
+        {
+            services.Configure<RabbitMQConnectionSettings>(config);
+            services.AddHostedService<RabbitMqBusService>();
+
+            return new MassTransitBuilder(services);
         }
     }
 }

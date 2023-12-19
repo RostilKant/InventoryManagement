@@ -10,14 +10,16 @@ namespace Entities.Settings
     
     public class Tenant
     {
-        public string Name { get; set; }
         public string Id { get; set; }
+        public string Name { get; set; }
         public string ConnectionString { get; set; }
+        public bool IsSeparate { get; set; }
     }
     
     public class Configuration
     {
         public string DbProvider { get; set; }
         public string ConnectionString { get; set; }
+        public int Counter { get; set; }
     }
 }

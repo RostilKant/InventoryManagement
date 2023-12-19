@@ -28,6 +28,11 @@ namespace InventoryManagement.Extensions
                     throw new System.Exception("Invalid database provider!");
             }
             
+            if (options.Tenants == null || !options.Tenants.Any())
+            {
+                return;
+            }
+            
             foreach (var tenant in options.Tenants)
             {
                 var connectionString = string.IsNullOrEmpty(tenant.ConnectionString)

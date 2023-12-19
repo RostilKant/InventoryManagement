@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entities.Models
 {
-    [Index(nameof(FirstName), nameof(LastName), IsUnique = true)]
+    [Index(nameof(FirstName), nameof(LastName), nameof(TenantId), IsUnique = true)]
     public record Employee : IMustHaveTenant
     {
         [Column("EmployeeId")]

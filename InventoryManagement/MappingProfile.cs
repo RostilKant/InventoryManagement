@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Entities.DataTransferObjects.Accessory;
 using Entities.DataTransferObjects.Component;
 using Entities.DataTransferObjects.Consumable;
@@ -44,7 +45,13 @@ namespace InventoryManagement
             CreateMap<LicenseForCreationDto, License>();
             CreateMap<LicenseForUpdateDto, License>();
 
-            CreateMap<UserForRegistrationDto, User>();
+            CreateMap<UserForRegistrationDto, User>()
+                .AfterMap((src, dest) =>
+                {
+                    dest.Id = Guid.NewGuid();
+                    dest.UserName = dest.Id.ToString();
+                });
+            
             CreateMap<UserForUpdateDto, User>();
         }
     }

@@ -1,6 +1,9 @@
 using AspNetCoreRateLimit;
+using Entities.Settings;
 using InventoryManagement.ActionFilters;
 using InventoryManagement.Extensions;
+using InventoryManagement.Messaging;
+using InventoryManagement.Messaging.Consumers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +58,11 @@ namespace InventoryManagement
             services.ConfigureIdentity();
             services.ConfigureJwt(Configuration);
             services.ConfigureSwagger();
+            
+            //Add rabbitMQ
+            services.AddMassTransitRabbitMQ(Configuration.GetSection("RabbitMQConnection"))
+                .AddConsumer<NewTenantConsumer>()
+                .Build();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

@@ -11,7 +11,6 @@ using Services.Contracts;
 
 namespace InventoryManagement.Controllers
 {
-    [Authorize]
     [Route("api/employees")]
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -43,6 +42,7 @@ namespace InventoryManagement.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeForCreationDto employeeForCreationDto)
         {
+            var user = HttpContext.Items["User"] as Guid? ?? Guid.Empty;
             var employeeDto = await _employeeService.CreateAsync(employeeForCreationDto);
             return CreatedAtAction("GetEmployee", new {id = employeeDto.Id}, employeeDto);
         }
