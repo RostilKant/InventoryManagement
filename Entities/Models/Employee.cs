@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Entities.Models
 {
     [Index(nameof(FirstName), nameof(LastName), nameof(TenantId), IsUnique = true)]
-    public record Employee : IMustHaveTenant
+    public record Employee : ITenantable
     {
         [Column("EmployeeId")]
         public Guid Id { get; set; }

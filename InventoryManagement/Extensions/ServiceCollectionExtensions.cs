@@ -13,32 +13,29 @@ namespace InventoryManagement.Extensions
         {
             var options = services.GetOptions<TenantSettings>(nameof(TenantSettings));
             
-            var defaultConnectionString = options.Defaults?.ConnectionString;
-            var defaultDbProvider = options.Defaults?.DbProvider;
+            var defStr = options.Defaults?.ConnectionString;
+            var defDb = options.Defaults?.DbProvider;
             
-            switch (defaultDbProvider?.ToLower())
+            switch (defDb?.ToLower())
             {
-                case "mssql":
-                    services.AddDbContext<ApplicationContext>(m => m.UseSqlServer(e => e.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
-                    break;
                 case "postgres":
-                    services.AddDbContext<ApplicationContext>(m => m.UseNpgsql(e => e.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+                    services.AddDbContext<ApplicationContext>(m => m.UseNpgsql(e =>
+                        e.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+                    break;
+                case "mssql":
+                    services.AddDbContext<ApplicationContext>(m => m.UseSqlServer(e =>
+                        e.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
                     break;
                 default:
                     throw new System.Exception("Invalid database provider!");
             }
             
-            if (options.Tenants == null || !options.Tenants.Any())
-            {
-                return;
-            }
+            if (options.Tenants == null || !options.Tenants.Any()) return;
             
-            foreach (var tenant in options.Tenants)
+            foreach (var connectionString in options.Tenants.Select(tenant => string.IsNullOrEmpty(tenant.ConnectionString)
+                         ? defStr
+                         : tenant.ConnectionString))
             {
-                var connectionString = string.IsNullOrEmpty(tenant.ConnectionString)
-                    ? defaultConnectionString
-                    : tenant.ConnectionString;               
-                
                 using var scope = services.BuildServiceProvider().CreateScope();
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 dbContext.Database.SetConnectionString(connectionString);
@@ -49,7 +46,8 @@ namespace InventoryManagement.Extensions
                 }
             }
         }
-        public static T GetOptions<T>(this IServiceCollection services, string sectionName) where T : new()
+
+        private static T GetOptions<T>(this IServiceCollection services, string sectionName) where T : new()
         {
             using var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();

@@ -7,7 +7,7 @@ using Entities.IdentityModels;
 
 namespace Entities.Models
 {
-    public record Device : IMustHaveTenant
+    public record Device : ITenantable
     {
         [Column("DeviceId")]
         public Guid Id { get; set; }

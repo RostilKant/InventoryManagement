@@ -58,7 +58,7 @@ namespace InventoryManagement.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             
-            services.AddTransient<ITenantService, TenantService>();
+            services.AddTransient<ITenantManagerService, TenantManagerService>();
         }
         
         public static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)

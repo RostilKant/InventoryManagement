@@ -7,7 +7,7 @@ using Entities.IdentityModels;
 
 namespace Entities.Models
 {
-    public class License : IMustHaveTenant
+    public class License : ITenantable
     {
         [Column("LicenseId")]
         public Guid Id { get; set; }

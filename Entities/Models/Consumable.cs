@@ -6,7 +6,7 @@ using Entities.IdentityModels;
 
 namespace Entities.Models
 {
-    public class Consumable : IMustHaveTenant
+    public class Consumable : ITenantable
     {
         [Column("ConsumableId")]
         public Guid Id { get; set; }

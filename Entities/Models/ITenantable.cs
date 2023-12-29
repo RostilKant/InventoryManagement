@@ -1,6 +1,6 @@
 namespace Entities.Models
 {
-    public interface IMustHaveTenant
+    public interface ITenantable
     {
         public string TenantId { get; set; }
     }
