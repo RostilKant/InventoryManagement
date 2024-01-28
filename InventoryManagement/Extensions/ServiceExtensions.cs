@@ -169,14 +169,14 @@ namespace InventoryManagement.Extensions
             });
         }
         
-        public static MassTransitBuilder AddMassTransitRabbitMQ(
+        public static RabbitMqMassBuilder AddMassTransitRabbitMQ(
             this IServiceCollection services,
             IConfiguration config)
         {
             services.Configure<RabbitMQConnectionSettings>(config);
             services.AddHostedService<RabbitMqBusService>();
 
-            return new MassTransitBuilder(services);
+            return new RabbitMqMassBuilder(services);
         }
     }
 }

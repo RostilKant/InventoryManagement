@@ -1,8 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Entities;
 using Entities.DataTransferObjects.User;
+using Entities.Settings;
 using InventoryManagement.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Services.Contracts;
 using Services.ServiceExtensions;
@@ -39,11 +44,66 @@ namespace InventoryManagement.Controllers
             
             return BadRequest(ModelState);
         }
+        
+        [HttpPost("organization/migrate")]
+        [Authorize]
+        public async Task<IActionResult> MigrateData([FromQuery] bool isSeparate, [FromQuery] string tenantId,
+            [FromServices] ApplicationContext context, [FromServices] TenantConfigurationDbContext tenantConfigurationDbContext,
+            [FromServices] IConfiguration configuration)
+        {
+            var tenantSettings = configuration.GetSection("TenantSettings").Get<TenantSettings>();
+
+            var tenant = tenantConfigurationDbContext.Tenants
+                .FirstOrDefault(x => x.Id == tenantId);
+
+            if (!isSeparate)
+            {
+                var accessories = await context.Accessories.ToListAsync();
+
+                var aspNetUsers = await context.Users.ToListAsync();
+
+                var newConnectionString = tenantSettings.Defaults.ConnectionString
+                    .Replace("counter", tenantSettings.Defaults.Counter.ToString());
+                context.Database.SetConnectionString(newConnectionString);
+
+                //migrate data
+
+                context.Accessories.AddRange(accessories);
+                context.Users.AddRange(aspNetUsers);
+                await context.SaveChangesAsync();
+
+                //delete old database
+
+                context.Database.SetConnectionString(tenant.ConnectionString);
+                await context.Database.EnsureDeletedAsync();
+
+                tenant.ConnectionString = newConnectionString;
+                tenant.IsSeparate = false;
+                await tenantConfigurationDbContext.SaveChangesAsync();
+            }
+
+            return Ok();
+        }
 
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration,
-            [FromQuery] string tenantId)
+            [FromQuery] string tenantId, [FromServices] ApplicationContext _context,
+            [FromServices] TenantConfigurationDbContext _tenantConfigurationDbContext)
         {
+            var tenants = await _tenantConfigurationDbContext.Tenants
+                .FirstOrDefaultAsync(x => x.Id == tenantId);
+
+            _context.Database.SetConnectionString(tenants.ConnectionString);
+
+            try
+            {
+                if (_context.Database.GetMigrations().Any()) await _context.Database.MigrateAsync();
+            }
+            catch
+            {
+                // ignored
+            }
+
             var (isCreated, errors) = await _authenticationService.RegisterUserAsync(userForRegistration);
 
             if (isCreated) return StatusCode(201);

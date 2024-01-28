@@ -1,7 +1,4 @@
-using Entities.Models;
-using Entities.Settings;
-
-namespace Entities
+namespace Multitenancy
 {
     public interface ITenantManagerService
     {

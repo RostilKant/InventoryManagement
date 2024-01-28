@@ -1,4 +1,4 @@
-namespace Entities.Settings
+namespace Multitenancy.Settings
 {
     public class TenantSettings
     {

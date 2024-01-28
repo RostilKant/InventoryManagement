@@ -1,4 +1,5 @@
 using AspNetCoreRateLimit;
+using Entities;
 using Entities.Settings;
 using InventoryManagement.ActionFilters;
 using InventoryManagement.Extensions;
@@ -7,6 +8,7 @@ using InventoryManagement.Messaging.Consumers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +38,9 @@ namespace InventoryManagement
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddSwaggerGenNewtonsoftSupport();
+            
+            services.AddDbContext<TenantConfigurationDbContext>(m => m.UseNpgsql(Configuration.GetConnectionString("TenantConfigurationDbContext"),
+                e => e.MigrationsAssembly(typeof(TenantConfigurationDbContext).Assembly.FullName)));
 
             // use http context accessor before services registration
             services.ConfigureHttpContextAccessor();

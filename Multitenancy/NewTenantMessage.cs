@@ -1,4 +1,4 @@
-﻿namespace Entities.DataTransferObjects
+﻿namespace Multitenancy
 {
     public class NewTenantMessage
     {

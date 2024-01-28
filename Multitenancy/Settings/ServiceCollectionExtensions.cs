@@ -1,12 +1,9 @@
-using System.Linq;
-using Entities;
-using Entities.Settings;
-using InventoryManagement.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Multitenancy.Messaging;
 
-namespace InventoryManagement.Extensions
+namespace Multitenancy.Settings
 {
     public static class ServiceCollectionExtensions
     {
@@ -58,9 +55,9 @@ namespace InventoryManagement.Extensions
         
         public static RabbitMqMassBuilder AddMassTransitRabbitMQ(
             this IServiceCollection services,
-            IConfiguration config)
+            Action<RabbitMQConnectionSettings> config)
         {
-            services.Configure<RabbitMQConnectionSettings>(config);
+            services.Configure(config);
             services.AddHostedService<RabbitMqBusService>();
 
             return new RabbitMqMassBuilder(services);

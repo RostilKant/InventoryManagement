@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using Entities.Settings;
+﻿using System.Text.Json.Serialization;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Multitenancy.Settings;
 
-namespace InventoryManagement.Messaging
+namespace Multitenancy.Messaging
 {
-    public class MassTransitBuilder
+    public class RabbitMqMassBuilder
     {
         private readonly IServiceCollection _services;
 
         private readonly List<Action<IBusRegistrationConfigurator>> _consumerSetup;
 
-        public MassTransitBuilder(IServiceCollection services)
+        public RabbitMqMassBuilder(IServiceCollection services)
         {
             _services = services;
             _consumerSetup = new List<Action<IBusRegistrationConfigurator>>();
         }
 
-        public MassTransitBuilder AddConsumer<T>() where T : class, IConsumer
+        public RabbitMqMassBuilder AddConsumer<T>() where T : class, IConsumer
         {
             _consumerSetup.Add(cfg => cfg.AddConsumer<T>());
             return this;

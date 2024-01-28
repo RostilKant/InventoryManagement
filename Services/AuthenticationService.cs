@@ -11,6 +11,7 @@ using Entities;
 using Entities.DataTransferObjects;
 using Entities.DataTransferObjects.User;
 using Entities.IdentityModels;
+using Entities.Models;
 using Entities.Settings;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
@@ -33,12 +34,13 @@ namespace Services
         private readonly IMapper _mapper;
         private readonly ApplicationContext _context;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly TenantConfigurationDbContext _tenantConfigurationDbContext;
         
         private User _user;
 
         public AuthenticationService(UserManager<User> userManager, ILogger<AuthenticationService> logger,
             IMapper mapper,
-            IConfiguration configuration, ApplicationContext context, IPublishEndpoint publishEndpoint)
+            IConfiguration configuration, ApplicationContext context, IPublishEndpoint publishEndpoint, TenantConfigurationDbContext tenantConfigurationDbContext)
         {
             _userManager = userManager;
             _logger = logger;
@@ -46,29 +48,31 @@ namespace Services
             _configuration = configuration;
             _context = context;
             _publishEndpoint = publishEndpoint;
+            _tenantConfigurationDbContext = tenantConfigurationDbContext;
         }
 
         public async Task<(bool isCreated, IEnumerable<IdentityError>)> RegisterOrganizationAsync(
             OrganizationForRegistrationDto organizationForRegistration)
         {
             var tenantSettings = _configuration.GetSection("TenantSettings").Get<TenantSettings>();
-
-            tenantSettings.Tenants ??= new List<Tenant>();
             
             var newTenant = new Tenant
             {
                 Name = organizationForRegistration.Name,
                 Id = organizationForRegistration.Name,
                 ConnectionString = organizationForRegistration.IsSeparate
-                    ? $"Host=localhost;Port=5432;Database=assets-management-{organizationForRegistration.Name};Username=postgres;Password=postgres;"
+                    ? $"Host=localhost;Port=5432;Database=assets-management-{organizationForRegistration.Name};Username=postgres;Password=postgres;" //taken from env variables
                     : tenantSettings.Defaults.ConnectionString
                         .Replace("counter", tenantSettings.Defaults.Counter.ToString()),
                 IsSeparate = organizationForRegistration.IsSeparate
             };
+            
+            _tenantConfigurationDbContext.Tenants.Add(newTenant);
+            await _tenantConfigurationDbContext.SaveChangesAsync();
+            
+            var tenants = await _tenantConfigurationDbContext.Tenants.ToListAsync();
 
-            tenantSettings.Tenants.Add(newTenant);
-
-            if (tenantSettings.Tenants.Count(x => !x.IsSeparate) % 10 == 0)
+            if (tenants.Count != 0 && tenants.Count(x => !x.IsSeparate) % 5 == 0)
             {
                 tenantSettings.Defaults.Counter++;
             }
@@ -78,10 +82,10 @@ namespace Services
             var json = await File.ReadAllTextAsync("appsettings.Development.json");
             var jsonObject = JObject.Parse(json);
             
-            jsonObject["TenantSettings"]["Tenants"] = JToken.FromObject(tenantSettings.Tenants);
+            jsonObject["TenantSettings"] = JToken.FromObject(tenantSettings);
             
             var output = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
-
+            
             await File.WriteAllTextAsync("appsettings.Development.json", output);
             
             await _publishEndpoint.Publish(new NewTenantMessage

@@ -16,7 +16,7 @@ namespace Entities
         public string TenantIdentifier { get; set; }
         private readonly ITenantManagerService _tenantService;
 
-        public ApplicationContext(DbContextOptions options, ITenantManagerService tenantService)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options, ITenantManagerService tenantService)
             : base(options)
         {
             _tenantService = tenantService;
@@ -150,8 +150,8 @@ namespace Entities
                 .HasQueryFilter(a =>
                     a.TenantId == TenantIdentifier);
             
-            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new DeviceConfiguration());
+            // modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            // modelBuilder.ApplyConfiguration(new DeviceConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
         

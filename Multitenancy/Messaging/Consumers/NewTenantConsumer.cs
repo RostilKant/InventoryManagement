@@ -1,14 +1,9 @@
-﻿using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using Entities;
-using Entities.DataTransferObjects;
-using Entities.Settings;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Multitenancy.Settings;
 
-namespace InventoryManagement.Messaging.Consumers
+namespace Multitenancy.Messaging.Consumers
 {
     public class NewTenantConsumer : IConsumer<NewTenantMessage>
     {

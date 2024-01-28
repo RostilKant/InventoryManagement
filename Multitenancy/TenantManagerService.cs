@@ -1,11 +1,8 @@
-using System;
-using System.Linq;
-using Entities.Models;
-using Entities.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Multitenancy.Settings;
 
-namespace Entities
+namespace Multitenancy
 {
     public class TenantManagerService : ITenantManagerService
     {

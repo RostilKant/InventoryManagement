@@ -5,21 +5,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Multitenancy;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace InventoryManagement.Migrations
+#nullable disable
+
+namespace Entities.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210508214156_UpdateConsumableEnumCategoryToString")]
-    partial class UpdateConsumableEnumCategoryToString
+    [Migration("20231016200413_AddingMultiTenancy")]
+    partial class AddingMultiTenancy
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.5")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("EmployeeLicense", b =>
                 {
@@ -34,6 +39,86 @@ namespace InventoryManagement.Migrations
                     b.HasIndex("LicensesId");
 
                     b.ToTable("EmployeeLicense");
+                });
+
+            modelBuilder.Entity("Entities.IdentityModels.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CompanyAddress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Accessory", b =>
@@ -70,15 +155,23 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeviceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Accessories");
                 });
@@ -113,7 +206,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Serial")
                         .IsRequired()
@@ -123,9 +216,17 @@ namespace InventoryManagement.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeviceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Components");
                 });
@@ -160,15 +261,23 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeviceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Consumables");
                 });
@@ -191,7 +300,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MacAddress")
                         .HasColumnType("text");
@@ -215,7 +324,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Serial")
                         .IsRequired()
@@ -226,18 +335,26 @@ namespace InventoryManagement.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("UpdateCost")
                         .HasColumnType("numeric");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Warranty")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("WarrantyExpires")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Devices");
 
@@ -247,19 +364,19 @@ namespace InventoryManagement.Migrations
                             Id = new Guid("65f245ae-81b6-425d-adaf-eb3ac1a2a5b9"),
                             Category = "Laptops",
                             Imei = "1234asdasf929123asf11ads",
-                            LastUpdateDate = new DateTime(2020, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastUpdateDate = new DateTime(2020, 11, 1, 12, 0, 0, 0, DateTimeKind.Utc),
                             MacAddress = "DF-64-62-7F-47-36",
                             Manufacturer = "Acer",
                             Model = "Aspire 5",
                             Notes = "",
                             OfficeAddress = "Kaliko Str. 127",
                             PurchaseCost = 1123.21m,
-                            PurchaseDate = new DateTime(2020, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PurchaseDate = new DateTime(2020, 8, 21, 12, 0, 0, 0, DateTimeKind.Utc),
                             Serial = "as82340ddsdf80dsf81",
                             Status = "Active",
                             UpdateCost = 112.56m,
                             Warranty = "3y",
-                            WarrantyExpires = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            WarrantyExpires = new DateTime(2023, 8, 21, 12, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
@@ -273,12 +390,12 @@ namespace InventoryManagement.Migrations
                             Notes = "",
                             OfficeAddress = "Sasamba Str. 23",
                             PurchaseCost = 545m,
-                            PurchaseDate = new DateTime(2020, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PurchaseDate = new DateTime(2020, 12, 1, 12, 0, 0, 0, DateTimeKind.Utc),
                             Serial = "as82312421sdaa180dsf81",
                             Status = "Active",
                             UpdateCost = 0m,
                             Warranty = "1y",
-                            WarrantyExpires = new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            WarrantyExpires = new DateTime(2021, 12, 1, 12, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
@@ -292,12 +409,12 @@ namespace InventoryManagement.Migrations
                             Notes = "",
                             OfficeAddress = "Kaliko Str. 127",
                             PurchaseCost = 856.99m,
-                            PurchaseDate = new DateTime(2020, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PurchaseDate = new DateTime(2020, 3, 14, 12, 0, 0, 0, DateTimeKind.Utc),
                             Serial = "as82340ddsdf80dsf81",
                             Status = "Active",
                             UpdateCost = 0m,
                             Warranty = "3y",
-                            WarrantyExpires = new DateTime(2023, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            WarrantyExpires = new DateTime(2023, 3, 14, 12, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -325,7 +442,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("EmploymentDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -353,11 +470,19 @@ namespace InventoryManagement.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("FirstName", "LastName")
                         .IsUnique();
@@ -372,7 +497,7 @@ namespace InventoryManagement.Migrations
                             City = "New-Popone",
                             Country = "New USexico",
                             Department = "Software_Development",
-                            EmploymentDate = new DateTime(2021, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmploymentDate = new DateTime(2021, 4, 10, 12, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Rose",
                             Job = "ASP.NET Core Developer",
                             LastName = "Lee",
@@ -388,7 +513,7 @@ namespace InventoryManagement.Migrations
                             City = "New-Carbon",
                             Country = "New USexico",
                             Department = "Software_Development",
-                            EmploymentDate = new DateTime(2021, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmploymentDate = new DateTime(2021, 5, 22, 12, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Kent",
                             Job = "Unity Developer",
                             LastName = "Zet",
@@ -404,7 +529,7 @@ namespace InventoryManagement.Migrations
                             City = "New-Cockie",
                             Country = "New USexico",
                             Department = "Hardware_Development",
-                            EmploymentDate = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmploymentDate = new DateTime(2021, 5, 1, 12, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Nikkie",
                             Job = "Drones Developer",
                             LastName = "Lol",
@@ -427,7 +552,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsReAssignable")
                         .HasColumnType("boolean");
@@ -451,11 +576,157 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Licenses");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aea77861-ddd0-45cb-8edc-28f0023930d2"),
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("EmployeeLicense", b =>
@@ -480,7 +751,13 @@ namespace InventoryManagement.Migrations
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Entities.IdentityModels.User", "User")
+                        .WithMany("Accessories")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Device");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Models.Component", b =>
@@ -490,7 +767,13 @@ namespace InventoryManagement.Migrations
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Entities.IdentityModels.User", "User")
+                        .WithMany("Components")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Device");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Models.Consumable", b =>
@@ -500,7 +783,13 @@ namespace InventoryManagement.Migrations
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Entities.IdentityModels.User", "User")
+                        .WithMany("Consumables")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Device");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Models.Device", b =>
@@ -510,7 +799,97 @@ namespace InventoryManagement.Migrations
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Entities.IdentityModels.User", "User")
+                        .WithMany("Devices")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Models.Employee", b =>
+                {
+                    b.HasOne("Entities.IdentityModels.User", "User")
+                        .WithMany("Employees")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Models.License", b =>
+                {
+                    b.HasOne("Entities.IdentityModels.User", "User")
+                        .WithMany("Licenses")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.IdentityModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.IdentityModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.IdentityModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.HasOne("Entities.IdentityModels.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Entities.IdentityModels.User", b =>
+                {
+                    b.Navigation("Accessories");
+
+                    b.Navigation("Components");
+
+                    b.Navigation("Consumables");
+
+                    b.Navigation("Devices");
+
+                    b.Navigation("Employees");
+
+                    b.Navigation("Licenses");
                 });
 
             modelBuilder.Entity("Entities.Models.Device", b =>

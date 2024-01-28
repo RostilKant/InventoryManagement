@@ -7,19 +7,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace InventoryManagement.Migrations
+#nullable disable
+
+namespace Entities.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210511092956_AddIdentity")]
-    partial class AddIdentity
+    [Migration("20240121204842_RemoveConfigs")]
+    partial class RemoveConfigs
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.5")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("EmployeeLicense", b =>
                 {
@@ -94,6 +98,9 @@ namespace InventoryManagement.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
@@ -110,7 +117,7 @@ namespace InventoryManagement.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Accessory", b =>
@@ -147,10 +154,13 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TenantId")
                         .HasColumnType("text");
 
                     b.Property<Guid?>("UserId")
@@ -195,7 +205,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Serial")
                         .IsRequired()
@@ -203,6 +213,9 @@ namespace InventoryManagement.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TenantId")
                         .HasColumnType("text");
 
                     b.Property<Guid?>("UserId")
@@ -247,10 +260,13 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TenantId")
                         .HasColumnType("text");
 
                     b.Property<Guid?>("UserId")
@@ -283,7 +299,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MacAddress")
                         .HasColumnType("text");
@@ -307,7 +323,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Serial")
                         .IsRequired()
@@ -316,6 +332,9 @@ namespace InventoryManagement.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TenantId")
                         .HasColumnType("text");
 
                     b.Property<decimal>("UpdateCost")
@@ -328,7 +347,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("WarrantyExpires")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -337,65 +356,6 @@ namespace InventoryManagement.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Devices");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("65f245ae-81b6-425d-adaf-eb3ac1a2a5b9"),
-                            Category = "Laptops",
-                            Imei = "1234asdasf929123asf11ads",
-                            LastUpdateDate = new DateTime(2020, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MacAddress = "DF-64-62-7F-47-36",
-                            Manufacturer = "Acer",
-                            Model = "Aspire 5",
-                            Notes = "",
-                            OfficeAddress = "Kaliko Str. 127",
-                            PurchaseCost = 1123.21m,
-                            PurchaseDate = new DateTime(2020, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Serial = "as82340ddsdf80dsf81",
-                            Status = "Active",
-                            UpdateCost = 112.56m,
-                            Warranty = "3y",
-                            WarrantyExpires = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("2dbf4106-9194-4125-8d4d-095e10cba4f4"),
-                            Category = "Laptops",
-                            Imei = "asdfi230ser3jsadf012",
-                            LastUpdateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MacAddress = "94-39-90-DB-C1-B8",
-                            Manufacturer = "Xiaomi",
-                            Model = "Redmibook 13",
-                            Notes = "",
-                            OfficeAddress = "Sasamba Str. 23",
-                            PurchaseCost = 545m,
-                            PurchaseDate = new DateTime(2020, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Serial = "as82312421sdaa180dsf81",
-                            Status = "Active",
-                            UpdateCost = 0m,
-                            Warranty = "1y",
-                            WarrantyExpires = new DateTime(2021, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("2b7efe32-3e84-4e46-8a8d-af5f757a0413"),
-                            Category = "Laptops",
-                            Imei = "q39450ifjsdgsjdgjs12342hd",
-                            LastUpdateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MacAddress = "AF-55-AF-35-CD-DF",
-                            Manufacturer = "Asus",
-                            Model = "Vivobook 14",
-                            Notes = "",
-                            OfficeAddress = "Kaliko Str. 127",
-                            PurchaseCost = 856.99m,
-                            PurchaseDate = new DateTime(2020, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Serial = "as82340ddsdf80dsf81",
-                            Status = "Active",
-                            UpdateCost = 0m,
-                            Warranty = "3y",
-                            WarrantyExpires = new DateTime(2023, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Employee", b =>
@@ -422,7 +382,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("EmploymentDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -450,6 +410,9 @@ namespace InventoryManagement.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
@@ -461,60 +424,10 @@ namespace InventoryManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("FirstName", "LastName")
+                    b.HasIndex("FirstName", "LastName", "TenantId")
                         .IsUnique();
 
                     b.ToTable("Employees");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("74257e60-490f-472f-ae81-17c9518a7ee6"),
-                            Address = "Big Guy Str.",
-                            City = "New-Popone",
-                            Country = "New USexico",
-                            Department = "Software_Development",
-                            EmploymentDate = new DateTime(2021, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Rose",
-                            Job = "ASP.NET Core Developer",
-                            LastName = "Lee",
-                            OfficeAddress = "Kaliko Str. 127",
-                            Phone = "+380734098995",
-                            State = "Jorji",
-                            ZipCode = "129823"
-                        },
-                        new
-                        {
-                            Id = new Guid("4c3c2c62-0ee8-4abb-93fa-d9bbf185d1d2"),
-                            Address = "Sunnie Star Str.",
-                            City = "New-Carbon",
-                            Country = "New USexico",
-                            Department = "Software_Development",
-                            EmploymentDate = new DateTime(2021, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Kent",
-                            Job = "Unity Developer",
-                            LastName = "Zet",
-                            OfficeAddress = "Kaliko Str. 127",
-                            Phone = "+380734098996",
-                            State = "Hemprane",
-                            ZipCode = "112522"
-                        },
-                        new
-                        {
-                            Id = new Guid("e5efeedd-207b-422c-8637-b2a4564d0737"),
-                            Address = "Sad dick Str.",
-                            City = "New-Cockie",
-                            Country = "New USexico",
-                            Department = "Hardware_Development",
-                            EmploymentDate = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Nikkie",
-                            Job = "Drones Developer",
-                            LastName = "Lol",
-                            OfficeAddress = "Kaliko Str. 127",
-                            Phone = "+380734098997",
-                            State = "Mranda",
-                            ZipCode = "542861"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.License", b =>
@@ -529,7 +442,7 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsReAssignable")
                         .HasColumnType("boolean");
@@ -553,7 +466,10 @@ namespace InventoryManagement.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TenantId")
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
@@ -589,13 +505,12 @@ namespace InventoryManagement.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("aea77861-ddd0-45cb-8edc-28f0023930d2"),
-                            ConcurrencyStamp = "67e41d4b-4a6e-4b3d-a19c-579985282239",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -605,8 +520,9 @@ namespace InventoryManagement.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -621,15 +537,16 @@ namespace InventoryManagement.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -644,7 +561,7 @@ namespace InventoryManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -665,7 +582,7 @@ namespace InventoryManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -680,7 +597,7 @@ namespace InventoryManagement.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -699,7 +616,7 @@ namespace InventoryManagement.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("EmployeeLicense", b =>
